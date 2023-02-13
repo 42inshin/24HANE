@@ -1,5 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main>홈</main>
+  <div>더보기</div>
 </template>
+
+<style scoped></style>

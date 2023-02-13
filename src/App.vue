@@ -11,8 +11,12 @@ const checkValidRoute = (routeName: RouteRecordName | null | undefined) => {
 
 <template>
   <HeaderBar v-if="checkValidRoute($route.name)" />
-  <RouterView />
+  <RouterView class="main" />
   <MenuBar v-if="checkValidRoute($route.name)" />
 </template>
 
-<style scoped></style>
+<style scoped>
+.main {
+  padding-top: 50px;
+}
+</style>
