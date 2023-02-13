@@ -21,5 +21,14 @@
   font-size: 1.25rem;
   color: var(--color-heading-on);
   font-weight: 700;
+  padding: 0;
+}
+.button a {
+  display: block;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

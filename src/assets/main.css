@@ -9,14 +9,21 @@ body {
   margin: 0 auto;
   padding: 0;
   font-weight: normal;
-  font-family: "Inter", sans-serif;
   height: 100%;
+}
+
+.container {
+  padding: 0 30px;
 }
 
 @media (hover: hover) {
   /* a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   } */
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (min-width: 1024px) {

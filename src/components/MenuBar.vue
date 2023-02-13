@@ -1,11 +1,27 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import HomeIconFill from "@/components/icons/IconHomeFill.vue";
+import HomeIconLine from "@/components/icons/IconHomeLine.vue";
+import CalendarIconFill from "@/components/icons/IconCalendarFill.vue";
+import CalendarIconLine from "@/components/icons/IconCalendarLine.vue";
+import MoreIconFill from "@/components/icons/IconMoreFill.vue";
+import MoreIconLine from "@/components/icons/IconMoreLine.vue";
+</script>
 
 <template>
-  <div class="wrap">
+  <div class="wrap container">
     <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/calendar">Calendar</RouterLink>
-      <RouterLink to="/more">More</RouterLink>
+      <RouterLink to="/home">
+        <HomeIconFill v-if="$route.name === 'home'" />
+        <HomeIconLine v-else />
+      </RouterLink>
+      <RouterLink to="/calendar">
+        <CalendarIconFill v-if="$route.name === 'calendar'" />
+        <CalendarIconLine v-else />
+      </RouterLink>
+      <RouterLink to="/more">
+        <MoreIconFill v-if="$route.name === 'more'" />
+        <MoreIconLine v-else />
+      </RouterLink>
     </nav>
   </div>
 </template>
@@ -17,8 +33,9 @@
   left: 0;
   width: 100%;
   height: 50px;
-  background-color: red;
+  background-color: var(--color-background);
   filter: var(--menu-shadow);
+  z-index: 9;
 }
 
 nav {
@@ -28,6 +45,18 @@ nav {
   height: 100%;
 }
 nav a {
-  
+  display: block;
+  height: 100%;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  nav a svg {
+    filter: invert(1);
+  }
 }
 </style>
