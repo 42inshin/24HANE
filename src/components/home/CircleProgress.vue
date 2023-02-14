@@ -86,6 +86,7 @@ const calcLine = () => {
   font-weight: 500;
   line-height: 30px;
   transform: translateY(-50%);
+  color: var(--black);
 }
 
 .circle .text .small {

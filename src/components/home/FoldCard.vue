@@ -38,11 +38,11 @@ const clickHandler = () => {
         <span class="timeNumber">
           {{ props.hour }}
         </span>
-        <span class="timeText">시간{{ " " }}</span>
+        <span class="timeUnit">시간{{ " " }}</span>
         <span class="timeNumber">
           {{ props.min }}
         </span>
-        <span class="timeText">분</span>
+        <span class="timeUnit">분</span>
         <div class="vIcon" :class="{ on: isOpen }">
           <ChevronIcon :primaryColor="colorSet" />
         </div>
@@ -57,7 +57,7 @@ const clickHandler = () => {
             {{ index }}
           </option>
         </select>
-        <span class="timeText">시간</span>
+        <span class="timeUnit">시간</span>
       </div>
     </div>
     <CircleProgress :percent="culculatePercent()" :goalTime="goalTime" />
@@ -84,7 +84,8 @@ const clickHandler = () => {
 .wrap.primaryColor {
   background-color: var(--color-primary);
 }
-.wrap.primaryColor .textWrap,
+.wrap.primaryColor .textWrap h2,
+.wrap.primaryColor .textWrap .timeUnit,
 .wrap.primaryColor .textWrap .timeNumber {
   color: #fff;
 }
@@ -119,12 +120,14 @@ h2 {
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.5rem;
+  color: var(--black);
 }
 
 .timeNumber {
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.5rem;
+  color: var(--black);
 }
 
 .goal .timeNumber {
@@ -135,6 +138,7 @@ h2 {
   font-size: 1.25rem;
   font-weight: 700;
   font-family: Inter, sans-serif;
+  color: var(--black);
 }
 
 .select {
@@ -146,10 +150,11 @@ h2 {
   background-color: transparent;
 }
 
-.timeText {
+.timeUnit {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.5rem;
+  color: var(--black);
 }
 
 .vIcon {
