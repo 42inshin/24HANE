@@ -17,6 +17,6 @@ const checkValidRoute = (routeName: RouteRecordName | null | undefined) => {
 
 <style scoped>
 .main {
-  padding-top: 50px;
+  padding: 80px 30px 30px;
 }
 </style>
