@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import FoldCard from "@/components/home/FoldCard.vue";
+import UserNumSection from "@/components/home/UserNumSection.vue";
 
 const useHour = ref(12);
 const useMinute = ref(42);
@@ -19,6 +20,7 @@ const useMinute = ref(42);
     >
       <template #title>월 누적 시간</template>
     </FoldCard>
+    <UserNumSection />
   </main>
 </template>
 
