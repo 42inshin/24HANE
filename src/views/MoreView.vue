@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeaderBarSub from "@/components/HeaderBarSub.vue";
+import HeaderBarSub from "@/components/common/HeaderBarSub.vue.js";
 import PageItem from "@/components/more/PageItem.vue";
 import NewPageItem from "@/components/more/NewPageItem.vue";
 import LogoutItem from "@/components/more/LogoutItem.vue";
