@@ -8,7 +8,7 @@
 
 <style scoped>
 footer {
-  font-size: 12px;
+  font-size: 0.75rem;
   height: 45px;
   display: flex;
   justify-content: center;
