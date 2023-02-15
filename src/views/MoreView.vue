@@ -3,6 +3,7 @@ import HeaderBarSub from "@/components/HeaderBarSub.vue";
 import PageItem from "@/components/more/PageItem.vue";
 import NewPageItem from "@/components/more/NewPageItem.vue";
 import LogoutItem from "@/components/more/LogoutItem.vue";
+import FooterItem from "@/components/more/FooterItem.vue";
 import ChatConversationIcon from "@/components/icons/IconChatConversation.vue";
 import InfomationIcon from "@/components/icons/IconInfomationCircle.vue";
 import UserVoiceIcon from "@/components/icons/IconUserVoice.vue";
@@ -33,6 +34,7 @@ import LogoutIcon from "@/components/icons/IconLogout.vue";
       <LogoutItem>
         <template #image><LogoutIcon /></template>
       </LogoutItem>
+      <FooterItem />
     </ul>
   </main>
 </template>
