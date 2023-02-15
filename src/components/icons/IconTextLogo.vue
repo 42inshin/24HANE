@@ -24,6 +24,6 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--signatue-2);
+  background-color: var(--color-secondary);
 }
 </style>
