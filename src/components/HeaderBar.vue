@@ -16,10 +16,14 @@ const isNotification = ref(false);
       </div>
       <h2>{{ intraId }} 님</h2>
     </div>
-    <div class="notification" :class="{ on: isNotification }">
+    <RouterLink
+      to="/notification"
+      class="notification"
+      :class="{ on: isNotification }"
+    >
       <NotificationIconFill v-if="isNotification" />
       <NotificationIconLine v-else />
-    </div>
+    </RouterLink>
   </nav>
 </template>
 
@@ -33,7 +37,7 @@ const isNotification = ref(false);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 16px 0 30px;
+  padding: 10px 16px 0 30px;
   z-index: 9;
 }
 

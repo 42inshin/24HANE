@@ -13,7 +13,9 @@ const checkValidRoute = (visibleRoutes: string[]) => {
 <template>
   <HeaderBar v-if="checkValidRoute(['home'])" />
   <RouterView />
-  <MenuBar v-if="checkValidRoute(['home', 'calendar', 'more'])" />
+  <MenuBar
+    v-if="checkValidRoute(['home', 'calendar', 'more', 'notification'])"
+  />
 </template>
 
 <style scoped></style>
