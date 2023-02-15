@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import { RouterView, type RouteRecordName } from "vue-router";
+import { RouterView, type RouteRecordName, useRoute } from "vue-router";
 import MenuBar from "@/components/MenuBar.vue";
 import HeaderBar from "@/components/HeaderBar.vue";
 
-const checkValidRoute = (routeName: RouteRecordName | null | undefined) => {
-  const unvisableRoutes = ["login", "auth"];
-  return !unvisableRoutes.includes(routeName as string);
+const route = useRoute();
+
+const checkValidRoute = (visibleRoutes: string[]) => {
+  return visibleRoutes.includes(route.name as string);
 };
 </script>
 
 <template>
-  <HeaderBar v-if="checkValidRoute($route.name)" />
-  <RouterView class="main" />
-  <MenuBar v-if="checkValidRoute($route.name)" />
+  <HeaderBar v-if="checkValidRoute(['home'])" />
+  <RouterView />
+  <MenuBar v-if="checkValidRoute(['home', 'calendar', 'more'])" />
 </template>
 
-<style scoped>
-.main {
-  padding: 80px 30px 30px;
-}
-</style>
+<style scoped></style>

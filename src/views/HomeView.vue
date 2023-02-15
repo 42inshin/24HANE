@@ -25,6 +25,10 @@ const useMinute = ref(42);
 </template>
 
 <style scoped>
+main {
+  padding: 80px 30px 30px;
+}
+
 .m-16 {
   margin-top: 16px;
 }

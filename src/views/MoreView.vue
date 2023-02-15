@@ -1,7 +1,52 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import HeaderBarSub from "@/components/HeaderBarSub.vue";
+import PageItem from "@/components/more/PageItem.vue";
+import NewPageItem from "@/components/more/NewPageItem.vue";
+import LogoutItem from "@/components/more/LogoutItem.vue";
+import ChatConversationIcon from "@/components/icons/IconChatConversation.vue";
+import InfomationIcon from "@/components/icons/IconInfomationCircle.vue";
+import UserVoiceIcon from "@/components/icons/IconUserVoice.vue";
+import CardIcon from "@/components/icons/IconCard.vue";
+import BookIcon from "@/components/icons/IconBook.vue";
+import LogoutIcon from "@/components/icons/IconLogout.vue";
+</script>
 
 <template>
-  <div>더보기</div>
+  <main>
+    <HeaderBarSub title="더보기" />
+    <ul>
+      <PageItem title="카드 재발급 신청" path="/card">
+        <template #image><CardIcon /></template>
+      </PageItem>
+      <NewPageItem title="지원금 지침 안내" path="https://www.naver.com">
+        <template #image><BookIcon /></template>
+      </NewPageItem>
+      <NewPageItem title="출입기록 문의" path="https://www.naver.com">
+        <template #image><ChatConversationIcon /></template>
+      </NewPageItem>
+      <NewPageItem title="이용 가이드" path="https://www.naver.com">
+        <template #image><InfomationIcon /></template>
+      </NewPageItem>
+      <NewPageItem title="앱 피드백" path="https://www.naver.com">
+        <template #image><UserVoiceIcon /></template>
+      </NewPageItem>
+      <LogoutItem>
+        <template #image><LogoutIcon /></template>
+      </LogoutItem>
+    </ul>
+  </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  padding: 70px 30px 30px;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+</style>

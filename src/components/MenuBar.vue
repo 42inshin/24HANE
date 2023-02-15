@@ -28,7 +28,7 @@ import MoreIconLine from "@/components/icons/IconMoreLine.vue";
 
 <style scoped>
 .wrap {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
