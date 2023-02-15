@@ -30,7 +30,7 @@ const clickHandler = () => {
 
 <template>
   <div class="wrap" :class="{ on: isOpen, primaryColor: colorSet }">
-    <div class="textWrap use" @click="clickHandler">
+    <div class="textWrap use tapHighlight" @click="clickHandler">
       <h2>
         <slot name="title"></slot>
       </h2>

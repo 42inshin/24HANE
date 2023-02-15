@@ -83,6 +83,10 @@ a {
   transition: 0.4s;
 }
 
+.tapHighlight {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   min-height: 100vh;
   color: var(--color-text);
