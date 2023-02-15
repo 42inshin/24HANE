@@ -15,7 +15,7 @@ import LogoutIcon from "@/components/icons/IconLogout.vue";
   <main>
     <HeaderBarSub title="더보기" />
     <ul>
-      <PageItem title="카드 재발급 신청" path="/card">
+      <PageItem title="카드 재발급 신청" path="/apply-card">
         <template #image><CardIcon /></template>
       </PageItem>
       <NewPageItem title="지원금 지침 안내" path="https://www.naver.com">
