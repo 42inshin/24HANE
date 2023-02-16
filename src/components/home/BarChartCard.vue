@@ -1,12 +1,49 @@
 <script setup lang="ts">
-import { ref } from "vue";
-const timeArr = ref([8, 0, 24, 31, 12, 0]);
+import { ref, computed } from "vue";
+const periodsData = ref([
+  {
+    periods: "2.12(월) - 2.18(일)",
+    total: 50,
+  },
+  {
+    periods: "2.5(월) - 2.11(일)",
+    total: 31,
+  },
+  {
+    periods: "1.29(월) - 2.4(일)",
+    total: 22,
+  },
+  {
+    periods: "2.22(월) - 2.28(일)",
+    total: 10,
+  },
+  {
+    periods: "2.15(월) - 2.21(일)",
+    total: 42,
+  },
+  {
+    periods: "2.8(월) - 2.14(일)",
+    total: 38,
+  },
+]);
+
+const timeArr = computed(() => {
+  const arr: number[] = [];
+  periodsData.value.forEach((data) => {
+    arr.push(data.total);
+  });
+  return arr;
+});
 
 const calcTimePercent = (time: number, times: number[]) => {
   const maxTime = Math.max(...times);
   const percent = Math.round((time / maxTime) * 100);
   if (percent === 0) return "6px";
   return percent + "%";
+};
+
+const calcAvgTime = (time: number) => {
+  return (time / 7).toFixed(1);
 };
 
 const clickIndex = ref(0);
@@ -16,21 +53,23 @@ const clickIndex = ref(0);
   <div class="wrap">
     <h3>최근 주간 그래프<span> (6주)</span></h3>
     <div class="detailView">
-      <div class="title">2.12(월) - 2.18(일)</div>
+      <div class="title">{{ periodsData[clickIndex].periods }}</div>
       <div class="timeView">
-        <div class="time">총 42시간</div>
-        <div class="time">평균 6.2시간</div>
+        <div class="time">총 {{ periodsData[clickIndex].total }}시간</div>
+        <div class="time">
+          평균 {{ calcAvgTime(periodsData[clickIndex].total) }}시간
+        </div>
       </div>
     </div>
     <ul>
       <li
         class="tapHighlight"
         :class="{ on: clickIndex == i }"
-        v-for="(time, i) in timeArr"
+        v-for="(data, i) in periodsData"
         :key="i"
         @click="clickIndex = i"
       >
-        <div :style="{ height: calcTimePercent(time, timeArr) }"></div>
+        <div :style="{ height: calcTimePercent(data.total, timeArr) }"></div>
       </li>
     </ul>
     <div class="preiodBox">

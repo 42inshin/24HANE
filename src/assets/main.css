@@ -11,6 +11,16 @@ body {
   height: 100%;
 }
 
+/* swiper */
+.swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  background-color: var(--gray-dark2);
+}
+.swiper-pagination-bullet-active {
+  background-color: var(--color-primary);
+}
+
 @media (hover: hover) {
 }
 

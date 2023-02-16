@@ -3,6 +3,10 @@ import { ref } from "vue";
 import FoldCard from "@/components/home/FoldCard.vue";
 import UserNumSection from "@/components/home/UserNumSection.vue";
 import BarChartCard from "@/components/home/BarChartCard.vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Pagination } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
 
 const useHour = ref(12);
 const useMinute = ref(42);
@@ -21,7 +25,20 @@ const useMinute = ref(42);
     >
       <template #title>월 누적 시간</template>
     </FoldCard>
-    <BarChartCard class="m-16"></BarChartCard>
+    <swiper
+      :spaceBetween="10"
+      :pagination="{
+        clickable: true,
+      }"
+      :modules="[Pagination]"
+    >
+      <swiper-slide>
+        <BarChartCard class="m-16 slide"></BarChartCard>
+      </swiper-slide>
+      <swiper-slide>
+        <BarChartCard class="m-16 slide"></BarChartCard>
+      </swiper-slide>
+    </swiper>
     <UserNumSection />
   </main>
 </template>
