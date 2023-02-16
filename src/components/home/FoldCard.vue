@@ -106,13 +106,14 @@ const clickHandler = () => {
 }
 
 .textWrap.goal {
-  margin-top: 16px;
+  margin-top: 60px;
   margin-right: 20px;
-  transition: opacity 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   opacity: 0;
 }
 
 .textWrap.goal.on {
+  margin-top: 16px;
   opacity: 1;
 }
 
