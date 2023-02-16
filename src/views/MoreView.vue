@@ -41,7 +41,7 @@ import LogoutIcon from "@/components/icons/IconLogout.vue";
 
 <style scoped>
 main {
-  padding: 70px 30px 30px;
+  padding: 70px 30px;
 }
 
 ul {

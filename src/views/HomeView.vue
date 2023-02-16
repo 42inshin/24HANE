@@ -28,7 +28,7 @@ const useMinute = ref(42);
 
 <style scoped>
 main {
-  padding: 80px 30px 30px;
+  padding: 80px 30px;
 }
 
 .m-16 {
