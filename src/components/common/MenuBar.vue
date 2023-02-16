@@ -8,7 +8,7 @@ import MoreIconLine from "@/components/icons/IconMoreLine.vue";
 </script>
 
 <template>
-  <div class="wrap container">
+  <div class="wrap">
     <nav>
       <RouterLink to="/home">
         <HomeIconFill v-if="$route.name === 'home'" />
@@ -36,6 +36,7 @@ import MoreIconLine from "@/components/icons/IconMoreLine.vue";
   background-color: var(--color-background);
   filter: var(--menu-shadow);
   z-index: 9;
+  padding: 0 30px;
 }
 
 nav {

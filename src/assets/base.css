@@ -81,6 +81,7 @@ a {
   text-decoration: none;
   color: inherit;
   transition: 0.4s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tapHighlight {

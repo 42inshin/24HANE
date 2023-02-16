@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView, useRoute } from "vue-router";
-import MenuBar from "@/components/common/MenuBar.vue.js";
-import HeaderBar from "@/components/common/HeaderBar.vue.js";
+import MenuBar from "@/components/common/MenuBar.vue";
+import HeaderBar from "@/components/common/HeaderBar.vue";
 
 const route = useRoute();
 
