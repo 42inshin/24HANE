@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import FoldCard from "@/components/home/FoldCard.vue";
 import UserNumSection from "@/components/home/UserNumSection.vue";
+import BarChartCard from "@/components/home/BarChartCard.vue";
 
 const useHour = ref(12);
 const useMinute = ref(42);
@@ -20,6 +21,7 @@ const useMinute = ref(42);
     >
       <template #title>월 누적 시간</template>
     </FoldCard>
+    <BarChartCard class="m-16"></BarChartCard>
     <UserNumSection />
   </main>
 </template>
