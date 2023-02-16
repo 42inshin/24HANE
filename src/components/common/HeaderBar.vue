@@ -4,7 +4,7 @@ import LogoIcon from "@/components/icons/IconLogo.vue";
 import NotificationIconFill from "@/components/icons/IconNotificationFill.vue";
 import NotificationIconLine from "@/components/icons/IconNotificationLine.vue";
 
-const intraId = ref("Anonymouse");
+const intraId = ref("Anonymous");
 const isNotification = ref(false);
 </script>
 
@@ -33,12 +33,13 @@ const isNotification = ref(false);
   top: 0;
   left: 0;
   width: 100%;
-  height: 50px;
+  height: 55px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px 0 30px;
+  padding: 10px 16px 10px 30px;
   z-index: 9;
+  background: var(--header-bg);
 }
 
 .profile {

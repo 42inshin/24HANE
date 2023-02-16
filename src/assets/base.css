@@ -49,6 +49,7 @@
   --color-text: var(--text-1);
   --color-text-more: var(--gray-dark2);
 
+  --header-bg: var(--white-soft);
   --menu-shadow: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.05));
 }
 
@@ -65,6 +66,7 @@
     --color-text-soft: var(--text-2);
     --color-text: var(--text-3);
     --color-text-more: var(--divider);
+    --header-bg: var(--black);
   }
 }
 
