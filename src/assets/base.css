@@ -6,7 +6,7 @@
   --white-soft: #f5f5f5;
 
   --gray: #9b9797;
-  --gary-dark: #5b5b5b;
+  --gray-dark: #5b5b5b;
   --gray-dark2: #707070;
   --gray-soft: #d9d9d9;
 
@@ -17,9 +17,9 @@
   --divider: #eaeaea;
   --red: #ea1515;
 
-  --text-1: var(--black);
-  --text-2: var(--gray);
-  --text-3: var(--white);
+  --text-black: var(--black);
+  --text-gray: var(--gray);
+  --text-white: var(--white);
 
   --bar-gradation: linear-gradient(200.75deg, #8ef2f3 11.67%, #735bf2 86.56%);
   --circle-border: 16px solid;
@@ -43,14 +43,15 @@
 
   --color-border: var(--divider);
 
-  --color-heading: var(--text-1);
-  --color-heading-on: var(--text-3);
-  --color-text-soft: var(--text-2);
-  --color-text: var(--text-1);
+  --color-heading: var(--text-black);
+  --color-heading-on: var(--text-white);
+  --color-text-soft: var(--text-gray);
+  --color-text: var(--text-black);
   --color-text-more: var(--gray-dark2);
 
   --header-bg: var(--white-soft);
   --menu-shadow: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.05));
+  --color-vbutton: var(--gray-dark);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -61,12 +62,13 @@
 
     --color-border: var(--divider);
 
-    --color-heading: var(--text-3);
-    --color-heading-on: var(--text-1);
-    --color-text-soft: var(--text-2);
-    --color-text: var(--text-3);
+    --color-heading: var(--text-white);
+    --color-heading-on: var(--text-black);
+    --color-text-soft: var(--text-gray);
+    --color-text: var(--text-white);
     --color-text-more: var(--divider);
     --header-bg: var(--black);
+    --color-vbutton: var(--gray);
   }
 }
 

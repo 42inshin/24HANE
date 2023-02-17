@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
-export const useCounterStore = defineStore("useTime", () => {
+export const useTimeStore = defineStore("useTime", () => {
   const dayHour = ref(0);
   const dayMinute = ref(0);
   const monthHour = ref(0);

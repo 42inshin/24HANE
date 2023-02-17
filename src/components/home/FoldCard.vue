@@ -26,6 +26,12 @@ const clickHandler = () => {
     colorSet.value = props.primaryColor;
   }
 };
+
+const checkColor = () => {
+  if (colorSet.value) {
+    return "#ffffff";
+  }
+};
 </script>
 
 <template>
@@ -44,7 +50,7 @@ const clickHandler = () => {
         </span>
         <span class="timeUnit">분</span>
         <div class="vIcon" :class="{ on: isOpen }">
-          <ChevronIcon :primaryColor="colorSet" />
+          <ChevronIcon :color="checkColor()" />
         </div>
       </div>
     </div>

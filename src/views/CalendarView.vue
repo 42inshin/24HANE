@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import CalendarSection from "@/components/calendar/CalendarSection.vue";
 </script>
 
 <template>
-  <div>캘린더</div>
+  <main>
+    <CalendarSection />
+  </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  padding: 30px 30px 80px;
+}
+</style>
