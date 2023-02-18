@@ -16,8 +16,6 @@ const {
   setSelectedDate,
 } = monthLog;
 
-const today = new Date();
-
 const clickDate = (date: number) => {
   setSelectedDate(date);
 };
@@ -40,7 +38,9 @@ const clickDate = (date: number) => {
             color: getDateColor(date),
           }"
           :class="{
-            today: today.getMonth() === showMonth() && date === showToday(),
+            today:
+              showToday().getMonth() === showMonth() &&
+              date === showToday().getDate(),
             selected: date === showSelectedDate(),
           }"
         >

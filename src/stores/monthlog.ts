@@ -2,27 +2,23 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 export const useMonthLogStore = defineStore("MonthLog", () => {
-  const today = ref(new Date()); // 2023-01-01
-  const year = ref(today.value.getFullYear()); // 2023
-  const month = ref(today.value.getMonth()); // 0 ~ 11
-  const date = ref(today.value.getDate()); // 오늘 일
-  const day = ref(new Date(year.value, month.value).getDay()); // 1일의 요일
-  const lastDate = ref(new Date(year.value, month.value + 1, 0).getDate()); // 월 총 일수
+  const today = ref(new Date()); // 오늘 날짜
+  const year = ref(today.value.getFullYear()); // 2023 보이는 년
+  const month = ref(today.value.getMonth()); // 0 ~ 11 보이는 달
+  const day = ref(new Date(year.value, month.value).getDay()); // 해당 월 1일의 요일
+  const lastDate = ref(new Date(year.value, month.value + 1, 0).getDate()); // 해당 월 총 일수
 
   const selectDate = ref(today.value.getDate()); // 선택한 일
   const logs = ref(logDatas);
 
   const showToday = () => {
-    return today.value.getDate();
+    return today.value;
   };
   const showYear = () => {
     return year.value;
   };
   const showMonth = () => {
     return month.value;
-  };
-  const showDate = () => {
-    return date.value;
   };
   const showDay = () => {
     return day.value;
@@ -102,14 +98,21 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   };
 
   const getDateColor = (date: number) => {
-    if (date <= showDate()) return "var(--color-black)";
+    if (date <= today.value.getDate()) return "var(--color-black)";
   };
 
   const getAccTime = (date: number) => {
     let duration = 0;
     logs.value.inOutLogs.forEach((log) => {
-      const startDate = new Date(log.inTimeStamp * 1000).getDate();
-      if (startDate === date) {
+      const logTime = new Date(log.inTimeStamp * 1000);
+      const LogYear = logTime.getFullYear();
+      const logMonth = logTime.getMonth();
+      const logDate = logTime.getDate();
+      if (
+        LogYear === showYear() &&
+        logMonth === showMonth() &&
+        logDate === date
+      ) {
         duration += log.durationSecond;
       }
       // data가 정렬되어있는 경우, 속도 빨라질수 있는 부분
@@ -125,7 +128,6 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     resetSelectedDate,
     showYear,
     showMonth,
-    showDate,
     showLastDate,
     showDay,
     logs,
