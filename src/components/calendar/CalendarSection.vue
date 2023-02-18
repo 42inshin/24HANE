@@ -6,14 +6,13 @@ import CalWeek from "@/components/calendar/CalWeek.vue";
 
 const monthLog = useMonthLogStore();
 const {
-  showToday,
   showSelectedDate,
-  showMonth,
   showLastDate,
   showDay,
   getDateBgColor,
   getDateColor,
   setSelectedDate,
+  checkToday,
 } = monthLog;
 
 const clickDate = (date: number) => {
@@ -31,16 +30,14 @@ const clickDate = (date: number) => {
         <div
           v-for="date in showLastDate()"
           :key="date"
-          @click="clickDate(date)"
+          @click="($event) => clickDate(date)"
           class="day"
           :style="{
             background: getDateBgColor(date),
             color: getDateColor(date),
           }"
           :class="{
-            today:
-              showToday().getMonth() === showMonth() &&
-              date === showToday().getDate(),
+            today: checkToday(date),
             selected: date === showSelectedDate(),
           }"
         >
@@ -73,7 +70,7 @@ const clickDate = (date: number) => {
   height: 30px;
   border-radius: 10px;
   margin: 0 auto;
-  transition: all 0.2s ease-in-out;
+  transition: border-radius 0.2s ease-in-out;
 }
 
 .today {

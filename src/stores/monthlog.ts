@@ -2,14 +2,20 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 export const useMonthLogStore = defineStore("MonthLog", () => {
+  const logs = ref(logDatas);
   const today = ref(new Date()); // 오늘 날짜
   const year = ref(today.value.getFullYear()); // 2023 보이는 년
   const month = ref(today.value.getMonth()); // 0 ~ 11 보이는 달
   const day = ref(new Date(year.value, month.value).getDay()); // 해당 월 1일의 요일
   const lastDate = ref(new Date(year.value, month.value + 1, 0).getDate()); // 해당 월 총 일수
-
   const selectDate = ref(today.value.getDate()); // 선택한 일
-  const logs = ref(logDatas);
+
+  const getLogs = () => {
+    return logs.value;
+  };
+  const setLogs = (data: LogsData) => {
+    logs.value = data;
+  };
 
   const showToday = () => {
     return today.value;
@@ -30,26 +36,23 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const showSelectedDate = () => {
     return selectDate.value;
   };
-
   const setSelectedDate = (date: number) => {
     selectDate.value = date;
   };
-
   const resetSelectedDate = () => {
     selectDate.value = today.value.getDate();
     year.value = today.value.getFullYear();
     month.value = today.value.getMonth();
-    date.value = today.value.getDate();
     day.value = new Date(year.value, month.value).getDay();
     lastDate.value = new Date(year.value, month.value + 1, 0).getDate();
   };
 
-  // 1일의 요일 구하기
+  // 해당 월 1일의 요일 계산하기
   const calcFirstDay = () => {
     day.value = new Date(year.value, month.value).getDay();
   };
 
-  // 월 총 일수 구하기
+  // 월 마지막 날짜(총 일수) 계산하기
   const calcLastDate = () => {
     lastDate.value = new Date(year.value, month.value + 1, 0).getDate();
   };
@@ -97,8 +100,22 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     console.log("accTime: ", date, accTime);
   };
 
+  const checkPastToday = (date: number) => {
+    if (showYear() < today.value.getFullYear()) return true; // 지난 년도
+    if (showMonth() < today.value.getMonth()) return true;
+    if (date < today.value.getDate()) return true;
+    return false;
+  };
+
+  const checkToday = (date: number) => {
+    if (date !== today.value.getDate()) return false;
+    if (showYear() !== today.value.getFullYear()) return false;
+    if (showMonth() !== today.value.getMonth()) return false;
+    return true;
+  };
+
   const getDateColor = (date: number) => {
-    if (date <= today.value.getDate()) return "var(--color-black)";
+    if (checkPastToday(date)) return "var(--color-black)";
   };
 
   const getAccTime = (date: number) => {
@@ -122,6 +139,8 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   };
 
   return {
+    getLogs,
+    setLogs,
     showToday,
     showSelectedDate,
     setSelectedDate,
@@ -130,15 +149,27 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     showMonth,
     showLastDate,
     showDay,
-    logs,
     prevMonth,
     nextMonth,
     getDateBgColor,
     getDateColor,
+    checkToday,
   };
 });
 
-const logDatas = {
+interface inOutLog {
+  inTimeStamp: number;
+  outTimeStamp: number;
+  durationSecond: number;
+}
+
+interface LogsData {
+  login: string;
+  profileImage: string;
+  inOutLogs: inOutLog[];
+}
+
+const logDatas: LogsData = {
   login: "inshin",
   profileImage:
     "https://cdn.intra.42.fr/users/04ba9ce3bea8ac58a3ff7c7bd55af2fc/inshin.jpg",
