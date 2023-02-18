@@ -2,15 +2,25 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 export const useMonthLogStore = defineStore("MonthLog", () => {
+  // api에서 받아온 데이터
   const logs = ref(logDatas);
-  const today = ref(new Date()); // 오늘 날짜
-  const year = ref(today.value.getFullYear()); // 2023 보이는 년
-  const month = ref(today.value.getMonth()); // 0 ~ 11 보이는 달
-  const day = ref(new Date(year.value, month.value).getDay()); // 해당 월 1일의 요일
-  const lastDate = ref(new Date(year.value, month.value + 1, 0).getDate()); // 해당 월 총 일수
-  const selectDate = ref(today.value.getDate()); // 선택한 일
+  // 오늘 날짜
+  const today = ref(new Date());
+  // 2023 현재 보이는 년도
+  const year = ref(today.value.getFullYear());
+  // 0 ~ 11 현재 보이는 달
+  const month = ref(today.value.getMonth());
+  // 현재 월 1일의 요일
+  const day = ref(new Date(year.value, month.value).getDay());
+  // 현재 월의 총 일수
+  const lastDate = ref(new Date(year.value, month.value + 1, 0).getDate());
+  // 선택한 일
+  const selectDate = ref(today.value.getDate());
 
-  const getLogs = () => {
+  // 2023. 2 캘린더 타이틀
+  const dateTitle = ref(`${year.value}. ${month.value + 1}`);
+
+  const showLogs = () => {
     return logs.value;
   };
   const setLogs = (data: LogsData) => {
@@ -39,12 +49,22 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const setSelectedDate = (date: number) => {
     selectDate.value = date;
   };
+
+  const showDateTitle = () => {
+    return dateTitle.value;
+  };
+  const setDateTitle = () => {
+    dateTitle.value = `${showYear()}. ${showMonth() + 1}`;
+  };
+
+  // 오늘 날짜로 초기화
   const resetSelectedDate = () => {
     selectDate.value = today.value.getDate();
     year.value = today.value.getFullYear();
     month.value = today.value.getMonth();
     day.value = new Date(year.value, month.value).getDay();
     lastDate.value = new Date(year.value, month.value + 1, 0).getDate();
+    setDateTitle();
   };
 
   // 해당 월 1일의 요일 계산하기
@@ -57,8 +77,34 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     lastDate.value = new Date(year.value, month.value + 1, 0).getDate();
   };
 
-  // 이전 달
+  // 24HANE 데이터가 시작된 날짜
+  const FIRST_DAY = {
+    year: 2022,
+    month: 8,
+    day: 1,
+  };
+
+  // 달력에 보여줄 날짜 계산하기
+  const calcOptions = () => {
+    const options = [];
+    for (let year = FIRST_DAY.year; year <= showToday().getFullYear(); year++) {
+      if (year == FIRST_DAY.year) {
+        for (let month = FIRST_DAY.month - 1; month < 12; month++) {
+          options.push(`${year}. ${month + 1}`);
+        }
+        continue;
+      } else {
+        for (let month = 0; month <= showToday().getMonth(); month++) {
+          options.push(`${year}. ${month + 1}`);
+        }
+      }
+    }
+    return options;
+  };
+
+  // 이전 달 버튼 클릭
   const prevMonth = () => {
+    if (year.value === 2022 && month.value <= 7) return;
     month.value--;
     if (month.value < 0) {
       month.value = 11;
@@ -67,10 +113,16 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     setSelectedDate(1);
     calcFirstDay();
     calcLastDate();
+    setDateTitle();
   };
 
-  // 다음 달
+  // 다음 달 버튼 클릭
   const nextMonth = () => {
+    if (
+      today.value.getFullYear() === year.value &&
+      today.value.getMonth() === month.value
+    )
+      return;
     month.value++;
     if (month.value > 11) {
       month.value = 0;
@@ -79,9 +131,10 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     setSelectedDate(1);
     calcFirstDay();
     calcLastDate();
+    setDateTitle();
   };
 
-  // 일별 누적시간 색상
+  // 일별 누적시간 색상 컬러셋
   const DATE_BG_COLOR = {
     0: "transparent", // 0
     1: "rgba(115,91,242, .2)", // 0 - 3
@@ -90,6 +143,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     4: "rgba(115,91,242, .8)", // 9 이상
   };
 
+  // 일별 누적시간 색상 계산
   const getDateBgColor = (date: number) => {
     const accTime = getAccTime(date);
     if (accTime == 0) return DATE_BG_COLOR[0];
@@ -97,27 +151,9 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     if (accTime > 6) return DATE_BG_COLOR[3];
     if (accTime > 3) return DATE_BG_COLOR[2];
     return DATE_BG_COLOR[1];
-    console.log("accTime: ", date, accTime);
   };
 
-  const checkPastToday = (date: number) => {
-    if (showYear() < today.value.getFullYear()) return true; // 지난 년도
-    if (showMonth() < today.value.getMonth()) return true;
-    if (date < today.value.getDate()) return true;
-    return false;
-  };
-
-  const checkToday = (date: number) => {
-    if (date !== today.value.getDate()) return false;
-    if (showYear() !== today.value.getFullYear()) return false;
-    if (showMonth() !== today.value.getMonth()) return false;
-    return true;
-  };
-
-  const getDateColor = (date: number) => {
-    if (checkPastToday(date)) return "var(--color-black)";
-  };
-
+  // 일별 누적시간 계산
   const getAccTime = (date: number) => {
     let duration = 0;
     logs.value.inOutLogs.forEach((log) => {
@@ -138,22 +174,58 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return duration / 3600;
   };
 
+  // 캘린더 날짜 색상
+  const getDateColor = (date: number) => {
+    if (checkPastToday(date)) return "var(--color-black)";
+  };
+
+  // 오늘보다 과거인지 체크
+  const checkPastToday = (date: number) => {
+    if (showYear() < today.value.getFullYear()) return true; // 지난 년도
+    if (showMonth() < today.value.getMonth()) return true;
+    if (date < today.value.getDate()) return true;
+    return false;
+  };
+
+  // 오늘인지 체크
+  const checkToday = (date: number) => {
+    if (date !== today.value.getDate()) return false;
+    if (showYear() !== today.value.getFullYear()) return false;
+    if (showMonth() !== today.value.getMonth()) return false;
+    return true;
+  };
+
+  // 캘린더 제목으로 월 선택 시
+  const selectMonth = () => {
+    const dateArr = showDateTitle().split(". ");
+    year.value = Number(dateArr[0]);
+    month.value = Number(dateArr[1]) - 1;
+    setSelectedDate(1);
+    calcFirstDay();
+    calcLastDate();
+  };
+
   return {
-    getLogs,
+    showLogs,
     setLogs,
     showToday,
-    showSelectedDate,
-    setSelectedDate,
-    resetSelectedDate,
     showYear,
     showMonth,
     showLastDate,
     showDay,
+    showSelectedDate,
+    setSelectedDate,
+    resetSelectedDate,
+    dateTitle,
+    showDateTitle,
+    setDateTitle,
+    calcOptions,
     prevMonth,
     nextMonth,
     getDateBgColor,
     getDateColor,
     checkToday,
+    selectMonth,
   };
 });
 

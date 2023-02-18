@@ -1,17 +1,33 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import VIcon from "@/components/icons/IconChevron.vue";
 import { useMonthLogStore } from "@/stores/monthlog";
 
 const monthLog = useMonthLogStore();
-const { showYear, showMonth, nextMonth, prevMonth } = monthLog;
+const { showDateTitle, calcOptions, nextMonth, prevMonth, selectMonth } =
+  monthLog;
 </script>
 
 <template>
-  <div class="pagination">
+  <div class="pagination tapHighlight">
     <button @click="prevMonth">
       <VIcon :color="`var(--color-vbutton)`" />
     </button>
-    <div class="title">{{ showYear() }}. {{ showMonth() + 1 }}</div>
+    <select
+      class="title select"
+      @change="selectMonth"
+      v-model="monthLog.dateTitle"
+      name="year-month"
+    >
+      <option
+        v-for="(date, i) in calcOptions()"
+        :key="i"
+        :value="date"
+        :selected="showDateTitle() === date"
+      >
+        {{ date }}
+      </option>
+    </select>
     <button @click="nextMonth">
       <VIcon :color="`var(--color-vbutton)`" />
     </button>
@@ -44,5 +60,18 @@ const { showYear, showMonth, nextMonth, prevMonth } = monthLog;
   font-weight: 700;
   color: var(--color-heading);
   user-select: none;
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font-family);
+}
+
+.select {
+  cursor: pointer;
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
 }
 </style>

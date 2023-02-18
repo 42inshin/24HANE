@@ -31,7 +31,7 @@ const clickDate = (date: number) => {
           v-for="date in showLastDate()"
           :key="date"
           @click="($event) => clickDate(date)"
-          class="day"
+          class="day tapHighlight"
           :style="{
             background: getDateBgColor(date),
             color: getDateColor(date),
