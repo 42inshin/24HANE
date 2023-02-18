@@ -11,5 +11,7 @@ import CalendarSection from "@/components/calendar/CalendarSection.vue";
 <style scoped>
 main {
   padding: 30px 30px 80px;
+  background-color: var(--color-background);
+  min-height: 100%;
 }
 </style>

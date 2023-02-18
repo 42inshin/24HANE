@@ -2,11 +2,138 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 export const useMonthLogStore = defineStore("MonthLog", () => {
-  const year = ref(new Date().getFullYear());
-  const month = ref(new Date().getMonth());
+  const today = ref(new Date()); // 2023-01-01
+  const year = ref(today.value.getFullYear()); // 2023
+  const month = ref(today.value.getMonth()); // 0 ~ 11
+  const date = ref(today.value.getDate()); // 오늘 일
+  const day = ref(new Date(year.value, month.value).getDay()); // 1일의 요일
+  const lastDate = ref(new Date(year.value, month.value + 1, 0).getDate()); // 월 총 일수
+
+  const selectDate = ref(today.value.getDate()); // 선택한 일
   const logs = ref(logDatas);
 
-  return { year, month, logs };
+  const showToday = () => {
+    return today.value.getDate();
+  };
+  const showYear = () => {
+    return year.value;
+  };
+  const showMonth = () => {
+    return month.value;
+  };
+  const showDate = () => {
+    return date.value;
+  };
+  const showDay = () => {
+    return day.value;
+  };
+  const showLastDate = () => {
+    return lastDate.value;
+  };
+
+  const showSelectedDate = () => {
+    return selectDate.value;
+  };
+
+  const setSelectedDate = (date: number) => {
+    selectDate.value = date;
+  };
+
+  const resetSelectedDate = () => {
+    selectDate.value = today.value.getDate();
+    year.value = today.value.getFullYear();
+    month.value = today.value.getMonth();
+    date.value = today.value.getDate();
+    day.value = new Date(year.value, month.value).getDay();
+    lastDate.value = new Date(year.value, month.value + 1, 0).getDate();
+  };
+
+  // 1일의 요일 구하기
+  const calcFirstDay = () => {
+    day.value = new Date(year.value, month.value).getDay();
+  };
+
+  // 월 총 일수 구하기
+  const calcLastDate = () => {
+    lastDate.value = new Date(year.value, month.value + 1, 0).getDate();
+  };
+
+  // 이전 달
+  const prevMonth = () => {
+    month.value--;
+    if (month.value < 0) {
+      month.value = 11;
+      year.value--;
+    }
+    setSelectedDate(1);
+    calcFirstDay();
+    calcLastDate();
+  };
+
+  // 다음 달
+  const nextMonth = () => {
+    month.value++;
+    if (month.value > 11) {
+      month.value = 0;
+      year.value++;
+    }
+    setSelectedDate(1);
+    calcFirstDay();
+    calcLastDate();
+  };
+
+  // 일별 누적시간 색상
+  const DATE_BG_COLOR = {
+    0: "transparent", // 0
+    1: "rgba(115,91,242, .2)", // 0 - 3
+    2: "rgba(115,91,242, .4)", // 3 - 6
+    3: "rgba(115,91,242, .6)", // 6 - 9
+    4: "rgba(115,91,242, .8)", // 9 이상
+  };
+
+  const getDateBgColor = (date: number) => {
+    const accTime = getAccTime(date);
+    if (accTime == 0) return DATE_BG_COLOR[0];
+    if (accTime > 9) return DATE_BG_COLOR[4];
+    if (accTime > 6) return DATE_BG_COLOR[3];
+    if (accTime > 3) return DATE_BG_COLOR[2];
+    return DATE_BG_COLOR[1];
+    console.log("accTime: ", date, accTime);
+  };
+
+  const getDateColor = (date: number) => {
+    if (date <= showDate()) return "var(--color-black)";
+  };
+
+  const getAccTime = (date: number) => {
+    let duration = 0;
+    logs.value.inOutLogs.forEach((log) => {
+      const startDate = new Date(log.inTimeStamp * 1000).getDate();
+      if (startDate === date) {
+        duration += log.durationSecond;
+      }
+      // data가 정렬되어있는 경우, 속도 빨라질수 있는 부분
+      // if (startDate > date) return duration / 3600;
+    });
+    return duration / 3600;
+  };
+
+  return {
+    showToday,
+    showSelectedDate,
+    setSelectedDate,
+    resetSelectedDate,
+    showYear,
+    showMonth,
+    showDate,
+    showLastDate,
+    showDay,
+    logs,
+    prevMonth,
+    nextMonth,
+    getDateBgColor,
+    getDateColor,
+  };
 });
 
 const logDatas = {
@@ -15,144 +142,94 @@ const logDatas = {
     "https://cdn.intra.42.fr/users/04ba9ce3bea8ac58a3ff7c7bd55af2fc/inshin.jpg",
   inOutLogs: [
     {
-      inTimeStamp: 1675164307,
-      outTimeStamp: 1675172890,
-      durationSecond: 8583,
+      inTimeStamp: 1676699708,
+      outTimeStamp: 1676704765,
+      durationSecond: 5057,
     },
     {
-      inTimeStamp: 1675155937,
-      outTimeStamp: 1675161713,
-      durationSecond: 5776,
+      inTimeStamp: 1676608040,
+      outTimeStamp: 1676629116,
+      durationSecond: 21076,
     },
     {
-      inTimeStamp: 1675140936,
-      outTimeStamp: 1675155101,
-      durationSecond: 14165,
+      inTimeStamp: 1676606223,
+      outTimeStamp: 1676607054,
+      durationSecond: 831,
     },
     {
-      inTimeStamp: 1675082265,
-      outTimeStamp: 1675089313,
-      durationSecond: 7048,
+      inTimeStamp: 1676592228,
+      outTimeStamp: 1676603885,
+      durationSecond: 11657,
     },
     {
-      inTimeStamp: 1675072995,
-      outTimeStamp: 1675082034,
-      durationSecond: 9039,
+      inTimeStamp: 1676516373,
+      outTimeStamp: 1676549277,
+      durationSecond: 32904,
     },
     {
-      inTimeStamp: 1675068825,
-      outTimeStamp: 1675069950,
-      durationSecond: 1125,
+      inTimeStamp: 1676511176,
+      outTimeStamp: 1676513849,
+      durationSecond: 2673,
     },
     {
-      inTimeStamp: 1674984280,
-      outTimeStamp: 1674998367,
-      durationSecond: 14087,
+      inTimeStamp: 1676454077,
+      outTimeStamp: 1676470213,
+      durationSecond: 16136,
     },
     {
-      inTimeStamp: 1674980948,
-      outTimeStamp: 1674981107,
-      durationSecond: 159,
+      inTimeStamp: 1676433448,
+      outTimeStamp: 1676451942,
+      durationSecond: 18494,
     },
     {
-      inTimeStamp: 1674881371,
-      outTimeStamp: 1674895173,
-      durationSecond: 13802,
+      inTimeStamp: 1676426980,
+      outTimeStamp: 1676432485,
+      durationSecond: 5505,
     },
     {
-      inTimeStamp: 1674797734,
-      outTimeStamp: 1674823880,
-      durationSecond: 26146,
+      inTimeStamp: 1676364497,
+      outTimeStamp: 1676382381,
+      durationSecond: 17884,
     },
     {
-      inTimeStamp: 1674796809,
-      outTimeStamp: 1674797477,
-      durationSecond: 668,
+      inTimeStamp: 1676346280,
+      outTimeStamp: 1676363269,
+      durationSecond: 16989,
     },
     {
-      inTimeStamp: 1674734194,
-      outTimeStamp: 1674740693,
-      durationSecond: 6499,
+      inTimeStamp: 1676340730,
+      outTimeStamp: 1676343573,
+      durationSecond: 2843,
     },
     {
-      inTimeStamp: 1674714622,
-      outTimeStamp: 1674729777,
-      durationSecond: 15155,
+      inTimeStamp: 1676334865,
+      outTimeStamp: 1676340012,
+      durationSecond: 5147,
     },
     {
-      inTimeStamp: 1674705897,
-      outTimeStamp: 1674713829,
-      durationSecond: 7932,
+      inTimeStamp: 1676280346,
+      outTimeStamp: 1676296930,
+      durationSecond: 16584,
     },
     {
-      inTimeStamp: 1674019410,
-      outTimeStamp: 1674045225,
-      durationSecond: 25815,
+      inTimeStamp: 1676266477,
+      outTimeStamp: 1676279805,
+      durationSecond: 13328,
     },
     {
-      inTimeStamp: 1673949823,
-      outTimeStamp: 1673960288,
-      durationSecond: 10465,
+      inTimeStamp: 1675488017,
+      outTimeStamp: 1675514746,
+      durationSecond: 26729,
     },
     {
-      inTimeStamp: 1673927967,
-      outTimeStamp: 1673946667,
-      durationSecond: 18700,
+      inTimeStamp: 1675413819,
+      outTimeStamp: 1675430916,
+      durationSecond: 17097,
     },
     {
-      inTimeStamp: 1673856196,
-      outTimeStamp: 1673873524,
-      durationSecond: 17328,
-    },
-    {
-      inTimeStamp: 1673846474,
-      outTimeStamp: 1673855391,
-      durationSecond: 8917,
-    },
-    {
-      inTimeStamp: 1673603442,
-      outTimeStamp: 1673612257,
-      durationSecond: 8815,
-    },
-    {
-      inTimeStamp: 1673585724,
-      outTimeStamp: 1673603438,
-      durationSecond: 17714,
-    },
-    {
-      inTimeStamp: 1673496358,
-      outTimeStamp: 1673513404,
-      durationSecond: 17046,
-    },
-    {
-      inTimeStamp: 1673429725,
-      outTimeStamp: 1673443304,
-      durationSecond: 13579,
-    },
-    {
-      inTimeStamp: 1673410785,
-      outTimeStamp: 1673429638,
-      durationSecond: 18853,
-    },
-    {
-      inTimeStamp: 1672809398,
-      outTimeStamp: 1672824128,
-      durationSecond: 14730,
-    },
-    {
-      inTimeStamp: 1672723069,
-      outTimeStamp: 1672751940,
-      durationSecond: 28871,
-    },
-    {
-      inTimeStamp: 1672671600,
-      outTimeStamp: 1672671820,
-      durationSecond: 220,
-    },
-    {
-      inTimeStamp: 1672634839,
-      outTimeStamp: 1672671599,
-      durationSecond: 36760,
+      inTimeStamp: 1675400333,
+      outTimeStamp: 1675412926,
+      durationSecond: 12593,
     },
   ],
 };

@@ -18,4 +18,10 @@ const checkValidRoute = (visibleRoutes: string[]) => {
   />
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  padding: 30px 30px 80px;
+  background-color: var(--color-background-soft);
+  min-height: 100%;
+}
+</style>

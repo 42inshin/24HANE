@@ -5,6 +5,10 @@ import CalendarIconFill from "@/components/icons/IconCalendarFill.vue";
 import CalendarIconLine from "@/components/icons/IconCalendarLine.vue";
 import MoreIconFill from "@/components/icons/IconMoreFill.vue";
 import MoreIconLine from "@/components/icons/IconMoreLine.vue";
+import { useMonthLogStore } from "@/stores/monthlog";
+
+const monthLog = useMonthLogStore();
+const { resetSelectedDate } = monthLog;
 </script>
 
 <template>
@@ -15,7 +19,10 @@ import MoreIconLine from "@/components/icons/IconMoreLine.vue";
         <HomeIconLine v-else />
       </RouterLink>
       <RouterLink to="/calendar">
-        <CalendarIconFill v-if="$route.name === 'calendar'" />
+        <CalendarIconFill
+          v-if="$route.name === 'calendar'"
+          @click="resetSelectedDate"
+        />
         <CalendarIconLine v-else />
       </RouterLink>
       <RouterLink to="/more">
