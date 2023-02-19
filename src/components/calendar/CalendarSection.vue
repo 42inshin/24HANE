@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import CalPagination from "@/components/calendar/CalPagination.vue";
-import { useMonthLogStore } from "@/stores/monthlog";
 import CalWeek from "@/components/calendar/CalWeek.vue";
+import AccMonth from "@/components/calendar/AccMonth.vue";
+import LogTable from "@/components/calendar/LogTable.vue";
+import { useMonthLogStore } from "@/stores/monthlog";
 
 const monthLog = useMonthLogStore();
 const {
@@ -45,6 +46,8 @@ const clickDate = (date: number) => {
         </div>
       </div>
     </div>
+    <AccMonth />
+    <LogTable />
   </div>
 </template>
 

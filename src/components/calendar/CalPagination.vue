@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import VIcon from "@/components/icons/IconChevron.vue";
 import { useMonthLogStore } from "@/stores/monthlog";
 
@@ -39,7 +38,7 @@ const { showDateTitle, calcOptions, nextMonth, prevMonth, selectMonth } =
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 12px;
 }
 .pagination button {
   width: 40px;

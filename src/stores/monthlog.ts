@@ -50,6 +50,32 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     selectDate.value = date;
   };
 
+  // 요일 계산
+  const showDayText = () => {
+    const day = new Date(year.value, month.value, selectDate.value).getDay();
+    switch (day) {
+      case 0:
+        return "일";
+      case 1:
+        return "월";
+      case 2:
+        return "화";
+      case 3:
+        return "수";
+      case 4:
+        return "목";
+      case 5:
+        return "금";
+      case 6:
+        return "토";
+    }
+  };
+
+  // 선택한 날짜 텍스트 (2.20 월요일)
+  const showSelectedDateText = () => {
+    return `${showMonth() + 1}.${showSelectedDate()} ${showDayText()}요일`;
+  };
+
   const showDateTitle = () => {
     return dateTitle.value;
   };
@@ -145,7 +171,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
 
   // 일별 누적시간 색상 계산
   const getDateBgColor = (date: number) => {
-    const accTime = getAccTime(date);
+    const accTime = getDateAccTime(date);
     if (accTime == 0) return DATE_BG_COLOR[0];
     if (accTime > 9) return DATE_BG_COLOR[4];
     if (accTime > 6) return DATE_BG_COLOR[3];
@@ -153,8 +179,62 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return DATE_BG_COLOR[1];
   };
 
+  // 일별 로그타임 계산
+  interface Log {
+    inLogTime: string;
+    outLogTime: string;
+    accLogTime: string;
+  }
+
+  const viewLogs = ref<Log[]>([]);
+
+  const setDisit: string = (num: number) => {
+    return num < 10 ? `0${num}` : num;
+  };
+
+  const changeTimetext = (accTime: number) => {
+    const hour = Math.floor(accTime / 3600);
+    const min = Math.floor((accTime % 3600) / 60);
+    const sec = Math.floor((accTime % 3600) % 60);
+
+    return `${setDisit(hour)}:${setDisit(min)}:${setDisit(sec)}`;
+  };
+
+  const getDateLogs: Log[] = () => {
+    const tempLogs: Log[] = [];
+    logs.value.inOutLogs.forEach((log) => {
+      const inLogTime = new Date(log.inTimeStamp * 1000);
+      const outLogTime = new Date(log.outTimeStamp * 1000);
+      const accLogTime = log.durationSecond;
+      const LogYear = inLogTime.getFullYear();
+      const logMonth = inLogTime.getMonth();
+      const logDate = inLogTime.getDate();
+      if (
+        LogYear === showYear() &&
+        logMonth === showMonth() &&
+        logDate === selectDate.value
+      ) {
+        tempLogs.push({
+          inLogTime: `${setDisit(inLogTime.getHours())}:${setDisit(
+            inLogTime.getMinutes()
+          )}:${setDisit(inLogTime.getSeconds())}`,
+          outLogTime: `${setDisit(outLogTime.getHours())}:${setDisit(
+            outLogTime.getMinutes()
+          )}:${setDisit(outLogTime.getSeconds())}`,
+          accLogTime: changeTimetext(accLogTime),
+        });
+      }
+    });
+    viewLogs.value = tempLogs;
+  };
+
+  const showDataLogs = () => {
+    getDateLogs();
+    return viewLogs.value;
+  };
+
   // 일별 누적시간 계산
-  const getAccTime = (date: number) => {
+  const getDateAccTime = (date: number) => {
     let duration = 0;
     logs.value.inOutLogs.forEach((log) => {
       const logTime = new Date(log.inTimeStamp * 1000);
@@ -172,6 +252,42 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
       // if (startDate > date) return duration / 3600;
     });
     return duration / 3600;
+  };
+
+  // 선택된 날짜의 누적시간 계산
+  const getSelectedDateAccTimeText = () => {
+    const accTime = getDateAccTime(showSelectedDate());
+    const hour = Math.floor(accTime);
+    const min = Math.floor((accTime - hour) * 60);
+    if (hour === 0 && min === 0) return "0분";
+    return `${hour}시간 ${min}분`;
+  };
+
+  // 선택된 월의 누적시간 계산
+  const getMonthAccTime = () => {
+    let duration = 0;
+    logs.value.inOutLogs.forEach((log) => {
+      const inTime = new Date(log.inTimeStamp * 1000);
+      const LogYear = inTime.getFullYear();
+      const logMonth = inTime.getMonth();
+      if (
+        !!log.outTimeStamp &&
+        LogYear === showYear() &&
+        logMonth === showMonth()
+      ) {
+        duration += log.durationSecond;
+      }
+    });
+    return duration / 3600;
+  };
+
+  // 선택된 월의 누적시간 텍스트
+  const getMonthAccTimeText = () => {
+    const accTime = getMonthAccTime();
+    const hour = Math.floor(accTime);
+    const min = Math.floor((accTime - hour) * 60);
+    if (hour === 0 && min === 0) return "0분";
+    return `${hour}시간 ${min}분`;
   };
 
   // 캘린더 날짜 색상
@@ -216,6 +332,10 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     showSelectedDate,
     setSelectedDate,
     resetSelectedDate,
+    showSelectedDateText,
+    getSelectedDateAccTimeText,
+    getMonthAccTimeText,
+    showDataLogs,
     dateTitle,
     showDateTitle,
     setDateTitle,

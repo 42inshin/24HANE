@@ -51,6 +51,7 @@
   --color-text-soft: var(--text-gray);
   --color-text: var(--text-black);
   --color-text-more: var(--gray-dark2);
+  --color-log-bg: var(--divider);
 
   --header-bg: var(--white-soft);
   --menu-shadow: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.05));
@@ -70,6 +71,8 @@
     --color-text-soft: var(--text-gray);
     --color-text: var(--text-white);
     --color-text-more: var(--divider);
+    --color-log-bg: #555555;
+
     --header-bg: var(--black);
     --color-vbutton: var(--gray);
   }
