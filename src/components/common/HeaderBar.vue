@@ -82,7 +82,7 @@ const isNotification = ref(false);
   content: "";
   position: absolute;
   display: block;
-  top: 6px;
+  top: 0px;
   left: calc(50% - 2px);
   width: 4px;
   height: 4px;

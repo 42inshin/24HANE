@@ -85,7 +85,6 @@ watch(showSelectedDate, () => {
   list-style: none;
   text-align: center;
   margin-bottom: 4px;
-  letter-spacing: -1px;
 }
 .logs .logEmpty {
   justify-content: center;

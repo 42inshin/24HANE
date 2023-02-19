@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
-
+import VIcon from "@/components/icons/IconChevron.vue";
 const props = defineProps<{
   title: string;
+  backButton?: boolean;
 }>();
 </script>
 
 <template>
-  <div class="wrap">
+  <div class="wrap" :class="{ backButton: backButton }">
+    <router-link v-if="props.backButton" to="home">
+      <VIcon :color="`var(--color-vbutton)`" class="vIcon" />
+    </router-link>
     <h2>{{ props.title }}</h2>
   </div>
 </template>
@@ -20,11 +24,33 @@ const props = defineProps<{
   width: 100%;
   height: 50px;
   line-height: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 30px;
+  padding: 15px 30px 0;
   z-index: 9;
+  background-color: var(--color-background-soft);
+}
+
+.wrap.backButton h2 {
+  text-align: center;
+}
+
+a {
+  position: absolute;
+  bottom: 2px;
+  left: 16px;
+  display: block;
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9;
+}
+
+.vIcon {
+  transform: rotate(180deg);
 }
 
 h2 {

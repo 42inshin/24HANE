@@ -64,7 +64,7 @@
     --color-background-soft: var(--black);
     --color-background-btn: var(--white);
 
-    --color-border: var(--divider);
+    --color-border: var(--gray-dark2);
 
     --color-heading: var(--text-white);
     --color-heading-on: var(--text-black);
