@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { getAccessToken } from "@/utils/cookie";
+// import { getAccessToken } from "@/utils/cookie";
+// console.log(getAccessToken());
+// import { getAccessToken } from "@/api/baseAPI";
 const originURL = window.location.origin;
 const backendURL = import.meta.env.VITE_APP_API_URL;
 console.log(`${backendURL}/user/login/42?redirect=${originURL}/auth`);
-console.log(getAccessToken());
 </script>
 
 <template>

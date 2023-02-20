@@ -1,9 +1,7 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { STATUS_401_UNAUTHORIZED } from "utils/const/const";
-import { getAccessToken } from "@/utils/cookie";
+import axios from "axios";
+import { getCookie, removeCookie } from "./cookie/cookies";
 
-export const VERSION_PATH = "v1";
-export const makeAPIPath = (path: string) => `${VERSION_PATH}/${path}`;
+const STATUS_401_UNAUTHORIZED = 401;
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
@@ -11,27 +9,27 @@ export const instance = axios.create({
 });
 
 instance.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const token = getAccessToken();
-    const newConfig = { ...config };
-    if (newConfig.headers) {
-      newConfig.headers.Authorization = `Bearer ${token}`;
+  (config) => {
+    const token = getCookie();
+    if (config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return newConfig;
+    return config;
   },
   (error) => Promise.reject(error.response)
 );
 
 instance.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response) => {
     return response;
   },
-  (error: AxiosError) => {
-    if (error.response?.status === STATUS_401_UNAUTHORIZED)
-      return Promise.resolve({
-        status: 401,
-        message: "로그인이 필요합니다.",
-      });
-    else return Promise.reject(error);
+  (error) => {
+    if (error.response?.status === STATUS_401_UNAUTHORIZED) {
+      removeCookie();
+      window.location.href = "/";
+      alert(error.response.data.message);
+      // 로그인이 필요합니다.
+    }
+    return Promise.reject(error);
   }
 );
