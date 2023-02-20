@@ -53,19 +53,6 @@ watch(showMonth, () => {
           </div>
         </li>
         <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
-        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
       </ul>
     </div>
   </div>

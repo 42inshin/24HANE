@@ -1,8 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getAccessToken } from "@/utils/cookie";
+const originURL = window.location.origin;
+const backendURL = import.meta.env.VITE_APP_API_URL;
+console.log(`${backendURL}/user/login/42?redirect=${originURL}/auth`);
+console.log(getAccessToken());
+</script>
 
 <template>
   <button class="button">
-    <router-link to="/auth">LOG IN</router-link>
+    <a :href="`${backendURL}/user/login/42?redirect=${originURL}/auth`"
+      >LOG IN</a
+    >
   </button>
 </template>
 
