@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import VIcon from "@/components/icons/IconChevron.vue";
 const props = defineProps<{
   title: string;

@@ -6,11 +6,29 @@ const {
   showDataLogs,
   showSelectedDate,
   showSelectedDateText,
+  showMonth,
 } = useMonthLogStore();
 
 const logs = ref(showDataLogs());
+
 watch(showSelectedDate, () => {
   logs.value = showDataLogs();
+});
+
+const calcHeight = () => {
+  const days = document.querySelector(".days");
+  const daysHeight = days?.clientHeight;
+  console.log(daysHeight);
+  const logs = document.querySelector(".logs");
+  if (daysHeight && daysHeight > 190) {
+    logs?.classList.add("smaller");
+  } else {
+    logs?.classList.remove("smaller");
+  }
+};
+
+watch(showMonth, () => {
+  calcHeight();
 });
 </script>
 
@@ -35,16 +53,25 @@ watch(showSelectedDate, () => {
           </div>
         </li>
         <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
+        <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
       </ul>
     </div>
   </div>
 </template>
 
 <style scoped>
-.wrap {
-  width: 100%;
-}
-
 .totalLog {
   display: flex;
   justify-content: space-between;
@@ -64,7 +91,7 @@ watch(showSelectedDate, () => {
   align-items: center;
   padding: 0;
   font-size: 0.875rem;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 .logTitle li {
   list-style: none;
@@ -77,14 +104,23 @@ watch(showSelectedDate, () => {
   font-size: 0.875rem;
   margin-bottom: 10px;
   padding: 0;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  height: calc(100vh - 514px);
 }
+
+.logs.smaller {
+  height: calc(100vh - 554px);
+}
+
 .logs .log {
   display: flex;
   justify-content: space-between;
   align-items: center;
   list-style: none;
   text-align: center;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .logs .logEmpty {
   justify-content: center;

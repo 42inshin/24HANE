@@ -13,7 +13,7 @@ const { getMonthAccTimeText } = useMonthLogStore();
   justify-content: center;
   align-items: center;
   height: 45px;
-  margin: 16px 0 20px;
+  margin: 20px 0 30px;
   background-color: var(--black);
   color: var(--white);
   border-radius: 10px;
