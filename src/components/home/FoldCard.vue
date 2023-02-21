@@ -12,9 +12,6 @@ const props = defineProps<{
 const isOpen = ref(false);
 const goalTime = ref(0);
 const colorSet = ref(props.isMonth);
-const monthlySelectTimes = [
-  20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320,
-];
 
 const culculatePercent = () => {
   if (goalTime.value === 0) return 0;
@@ -68,12 +65,8 @@ const checkColor = () => {
         </select>
         <select v-else v-model="goalTime" class="timeNumber select">
           <option :value="0" selected>0</option>
-          <option
-            v-for="index in monthlySelectTimes"
-            :key="index"
-            :value="index"
-          >
-            {{ index }}
+          <option v-for="index in 16" :key="index" :value="index * 20">
+            {{ index * 20 }}
           </option>
         </select>
         <span class="timeUnit">시간</span>
