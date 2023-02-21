@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PeriodData } from "@/stores/home";
+import type { PeriodData } from "@/types/user";
 import { ref, computed } from "vue";
 
 // const props = defineProps<{

@@ -1,6 +1,25 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
+interface inOutLog {
+  inTimeStamp: number;
+  outTimeStamp: number;
+  durationSecond: number;
+}
+
+interface LogsData {
+  login: string;
+  profileImage: string;
+  inOutLogs: inOutLog[];
+}
+
+// 일별 로그타임 계산
+interface Log {
+  inLogTime: string;
+  outLogTime: string;
+  accLogTime: string;
+}
+
 export const useMonthLogStore = defineStore("MonthLog", () => {
   // api에서 받아온 데이터
   const logs = ref(logDatas);
@@ -179,13 +198,6 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return DATE_BG_COLOR[1];
   };
 
-  // 일별 로그타임 계산
-  interface Log {
-    inLogTime: string;
-    outLogTime: string;
-    accLogTime: string;
-  }
-
   const viewLogs = ref<Log[]>([]);
 
   const setDisit: string = (num: number) => {
@@ -348,18 +360,6 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     selectMonth,
   };
 });
-
-interface inOutLog {
-  inTimeStamp: number;
-  outTimeStamp: number;
-  durationSecond: number;
-}
-
-interface LogsData {
-  login: string;
-  profileImage: string;
-  inOutLogs: inOutLog[];
-}
 
 const logDatas: LogsData = {
   login: "inshin",

@@ -1,24 +1,10 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { getMainInfo, getAccTimes } from "@/api/userAPI";
-
-export interface PeriodData {
-  periods: string;
-  total: number;
-}
-
-interface MainInfo {
-  login: string;
-  profileImage: string;
-  isAdmin: boolean;
-  gaepo: number;
-  seocho: number;
-  inoutState: "IN" | "OUT";
-  tagAt: null | string;
-}
+import type { UserInfo, UserAccTime, MainInfo, PeriodData } from "@/types/user";
 
 export const homeStore = defineStore("home", () => {
-  const userInfo = ref({
+  const userInfo: UserInfo = ref({
     loginID: "",
     isAdmin: false,
     profileImage: "",
@@ -111,7 +97,7 @@ export const homeStore = defineStore("home", () => {
       const { data: mainInfo }: MainInfo = await getMainInfo();
       console.log(mainInfo);
       userInfo.value = {
-        loginID: mainInfo.login,
+        login: mainInfo.login,
         isAdmin: mainInfo.isAdmin,
         profileImage: mainInfo.profileImage,
         inoutState: mainInfo.inoutState,
@@ -134,7 +120,7 @@ export const homeStore = defineStore("home", () => {
 
   const apiAccTimes = async () => {
     try {
-      const { data: accTimes } = await getAccTimes();
+      const { data: accTimes }: UserAccTime = await getAccTimes();
       console.log(accTimes);
       accDate.value = calcSecToTime(accTimes.todayAccumationTime);
       accMonth.value = calcSecToTime(accTimes.monthAccumationTime);

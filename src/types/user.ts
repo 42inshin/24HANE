@@ -1,22 +1,22 @@
 export interface UserInfo {
-  loginID: string;
+  login: string;
   isAdmin: boolean;
   profileImage: string;
   inoutState: "IN" | "OUT";
   tagAt?: null | string;
 }
 
-export interface UserDurationTime {
-  todayDurationTime: number;
-  monthDurationTime: number;
-}
-
-export interface UserInfoResponse {
-  login: UserInfo["loginID"];
-  profileImage: UserInfo["profileImage"];
-  isAdmin: UserInfo["isAdmin"];
-  inoutState: UserInfo["inoutState"];
-  tagAt: UserInfo["tagAt"];
+export interface MainInfo extends UserInfo {
   gaepo?: number;
   seocho?: number;
+}
+
+export interface UserAccTime {
+  todayAccumationTime: number;
+  monthAccumationTime: number;
+}
+
+export interface PeriodData {
+  periods: string;
+  total: number;
 }
