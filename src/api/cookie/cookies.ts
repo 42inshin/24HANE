@@ -5,5 +5,5 @@ const tokenName = import.meta.env.VITE_TOKEN;
 export const getCookie = () => VueCookies.get(tokenName);
 
 export const removeCookie = (option?: any): void => {
-  return cookies.remove(tokenName, { ...option });
+  return VueCookies.remove(tokenName, { ...option });
 };

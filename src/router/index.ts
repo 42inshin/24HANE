@@ -5,6 +5,7 @@ import HomeView from "@/views/HomeView.vue";
 import CalendarView from "@/views/CalendarView.vue";
 import MoreView from "@/views/MoreView.vue";
 import NotificationView from "@/views/NotificationView.vue";
+import { getCookie } from "@/api/cookie/cookies";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,14 +56,17 @@ const router = createRouter({
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   const isLogin = localStorage.getItem("isLogin");
-//   if (to.name !== "login" && !isLogin) {
-//     next({ name: "login" });
-//     alert("로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  const token = getCookie();
+  const isLogin = localStorage.getItem("isLogin");
+  console.log("isLogin", isLogin);
+  console.log("token", token);
+  if (to.name !== "login" && to.name !== "auth" && !isLogin && token) {
+    next({ name: "login" });
+    alert("로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");
+  } else {
+    next();
+  }
+});
 
 export default router;

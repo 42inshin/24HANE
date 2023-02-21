@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import router from "@/router";
+import { removeCookie } from "@/api/cookie/cookies";
 
 const clickLogout = () => {
+  removeCookie();
+  localStorage.removeItem("isLogin");
   router.push("/");
 };
 </script>
