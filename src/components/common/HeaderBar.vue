@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
 import LogoIcon from "@/components/icons/IconLogo.vue";
 import NotificationIconFill from "@/components/icons/IconNotificationFill.vue";
 import NotificationIconLine from "@/components/icons/IconNotificationLine.vue";
@@ -15,9 +15,14 @@ const isNotification = ref(false);
   <nav class="wrap">
     <div class="profile">
       <div class="profileImg">
-        <LogoIcon />
+        <img
+          v-if="!!userInfo.profileImage"
+          :src="userInfo.profileImage"
+          alt="프로필 이미지"
+        />
+        <LogoIcon v-else />
       </div>
-      <h2>{{ userInfo.loginID }} 님</h2>
+      <h2>{{ userInfo.login }} 님</h2>
     </div>
     <RouterLink
       to="/notification"
@@ -60,7 +65,8 @@ const isNotification = ref(false);
   border-radius: 50%;
   overflow: hidden;
 }
-.profileImg svg {
+.profileImg svg,
+.profileImg img {
   width: 100%;
   height: 100%;
 }
