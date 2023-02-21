@@ -1,7 +1,6 @@
 import axios from "axios";
 import { getCookie, removeCookie } from "./cookie/cookies";
-
-const STATUS_401_UNAUTHORIZED = 401;
+import { STATUS_401_UNAUTHORIZED } from "@/constants/statusCode";
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
@@ -25,10 +24,11 @@ instance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === STATUS_401_UNAUTHORIZED) {
+      localStorage.removeItem("isLogin");
       removeCookie();
-      window.location.href = "/";
-      alert(error.response.data.message);
-      // 로그인이 필요합니다.
+      // window.location.href = "/";
+      // alert(error.response.data.message);
+      //로그인이 필요합니다.
     }
     return Promise.reject(error);
   }

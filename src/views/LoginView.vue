@@ -10,7 +10,7 @@ import LogoIcon from "@/components/icons/IconLogo.vue";
     </div>
     <div class="buttonWrap">
       <div class="notice">
-        <p>입실과 퇴실의 짝이 일치하는 경우에만 출입 누적 시간이 반영됩니다.</p>
+        <p>입실과 퇴실의 짝이 일치하는 경우에만 출입 누적시간이 반영됩니다.</p>
         <p>입/퇴실 시 출입카드를 꼭 태깅해 주세요.</p>
       </div>
       <LoginButton class="button" />
@@ -27,6 +27,11 @@ import LogoIcon from "@/components/icons/IconLogo.vue";
   height: 100vh;
   background-color: var(--color-background);
   padding: 30px;
+  background: linear-gradient(
+    45deg,
+    rgba(115, 92, 242, 1),
+    rgba(14, 167, 169, 0.4)
+  );
 }
 
 .logoBox {
@@ -51,6 +56,10 @@ import LogoIcon from "@/components/icons/IconLogo.vue";
   font-size: 0.75rem;
   color: var(--color-heading);
   font-weight: 700;
+}
+
+.notice p {
+  color: #fff;
 }
 
 .button {

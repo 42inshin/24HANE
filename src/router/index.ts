@@ -5,7 +5,6 @@ import HomeView from "@/views/HomeView.vue";
 import CalendarView from "@/views/CalendarView.vue";
 import MoreView from "@/views/MoreView.vue";
 import NotificationView from "@/views/NotificationView.vue";
-import ApplyCardView from "@/views/ApplyCardView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,9 +42,6 @@ const router = createRouter({
     {
       path: "/apply-card",
       name: "apply-card",
-      // route level code-splitting
-      // this generates a separate chunk (card.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import("../views/ApplyCardView.vue"),
     },
     {
@@ -58,5 +54,15 @@ const router = createRouter({
     },
   ],
 });
+
+// router.beforeEach((to, from, next) => {
+//   const isLogin = localStorage.getItem("isLogin");
+//   if (to.name !== "login" && !isLogin) {
+//     next({ name: "login" });
+//     alert("로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
