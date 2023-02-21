@@ -1,34 +1,69 @@
 <script setup lang="ts">
+import type { PeriodData } from "@/stores/home";
 import { ref, computed } from "vue";
-const periodsData = ref([
+
+// const props = defineProps<{
+//   periodsData?: PeriodData[];
+// }>();
+
+const dumyData: PeriodData[] = [
   {
-    periods: "2.12(월) - 2.18(일)",
-    total: 50,
+    periods: "없음",
+    total: 0,
   },
   {
-    periods: "2.5(월) - 2.11(일)",
-    total: 31,
+    periods: "없음",
+    total: 0,
   },
   {
-    periods: "1.29(월) - 2.4(일)",
-    total: 22,
+    periods: "없음",
+    total: 0,
   },
   {
-    periods: "2.22(월) - 2.28(일)",
-    total: 10,
+    periods: "없음",
+    total: 0,
   },
   {
-    periods: "2.15(월) - 2.21(일)",
-    total: 42,
+    periods: "없음",
+    total: 0,
   },
   {
-    periods: "2.8(월) - 2.14(일)",
-    total: 38,
+    periods: "없음",
+    total: 0,
   },
-]);
+];
+const periodsData = ref(dumyData);
+// const periodsData = ref(props.periodsData);
+// const periodsData = ref([
+//   {
+//     periods: "2.12(월) - 2.18(일)",
+//     total: 50,
+//   },
+//   {
+//     periods: "2.5(월) - 2.11(일)",
+//     total: 31,
+//   },
+//   {
+//     periods: "1.29(월) - 2.4(일)",
+//     total: 22,
+//   },
+//   {
+//     periods: "2.22(월) - 2.28(일)",
+//     total: 10,
+//   },
+//   {
+//     periods: "2.15(월) - 2.21(일)",
+//     total: 42,
+//   },
+//   {
+//     periods: "2.8(월) - 2.14(일)",
+//     total: 38,
+//   },
+// ]);
 
 const timeArr = computed(() => {
   const arr: number[] = [];
+  if (!periodsData.value) return arr;
   periodsData.value.forEach((data) => {
     arr.push(data.total);
   });
@@ -38,7 +73,7 @@ const timeArr = computed(() => {
 const calcTimePercent = (time: number, times: number[]) => {
   const maxTime = Math.max(...times);
   const percent = Math.round((time / maxTime) * 100);
-  if (percent === 0) return "6px";
+  if (!percent) return "6px";
   return percent + "%";
 };
 

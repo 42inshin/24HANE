@@ -26,7 +26,7 @@ instance.interceptors.response.use(
     if (error.response?.status === STATUS_401_UNAUTHORIZED) {
       localStorage.removeItem("isLogin");
       removeCookie();
-      // window.location.href = "/";
+      window.location.href = "/";
       // alert(error.response.data.message);
       //로그인이 필요합니다.
     }

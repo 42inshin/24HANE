@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import UserNumCard from "@/components/home/UserNumCard.vue";
+import { homeStore } from "@/stores/home";
+import { watch } from "vue";
 
-const userNumInGapo = ref(121);
-const userNumInSeocho = ref(423);
+const { getNumberOfPeople } = homeStore();
+const userNum = getNumberOfPeople();
 </script>
 
 <template>
   <section class="userNumSection">
     <h2>실시간 현황</h2>
     <div class="userNumCards">
-      <UserNumCard class="m-8" :userNum="userNumInGapo">
+      <UserNumCard class="m-8" :userNum="userNum.gaepo">
         <template #title>개포</template>
       </UserNumCard>
-      <UserNumCard class="m-8" :userNum="userNumInSeocho">
+      <UserNumCard class="m-8" :userNum="userNum.seocho">
         <template #title>서초</template>
       </UserNumCard>
     </div>

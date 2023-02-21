@@ -6,12 +6,15 @@ import CircleProgress from "@/components/home/CircleProgress.vue";
 const props = defineProps<{
   hour: number;
   min: number;
-  primaryColor?: boolean;
+  isMonth?: boolean;
 }>();
 
 const isOpen = ref(false);
 const goalTime = ref(0);
-const colorSet = ref(props.primaryColor);
+const colorSet = ref(props.isMonth);
+const monthlySelectTimes = [
+  20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320,
+];
 
 const culculatePercent = () => {
   if (goalTime.value === 0) return 0;
@@ -23,7 +26,7 @@ const clickHandler = () => {
   if (isOpen.value) {
     colorSet.value = false;
   } else {
-    colorSet.value = props.primaryColor;
+    colorSet.value = props.isMonth;
   }
 };
 
@@ -57,9 +60,19 @@ const checkColor = () => {
     <div class="textWrap goal" :class="{ on: isOpen }">
       <h2>목표 시간</h2>
       <div>
-        <select v-model="goalTime" class="timeNumber select">
+        <select v-if="!isMonth" v-model="goalTime" class="timeNumber select">
           <option :value="0" selected>0</option>
           <option v-for="index in 24" :key="index" :value="index">
+            {{ index }}
+          </option>
+        </select>
+        <select v-else v-model="goalTime" class="timeNumber select">
+          <option :value="0" selected>0</option>
+          <option
+            v-for="index in monthlySelectTimes"
+            :key="index"
+            :value="index"
+          >
             {{ index }}
           </option>
         </select>

@@ -2,7 +2,6 @@
 import TextLogoIcon from "@/components/icons/IconTextLogo.vue";
 import router from "@/router";
 import { onMounted } from "vue";
-import { getCookie } from "@/api/cookie/cookies";
 import { getIsLogin } from "@/api/userAPI";
 import { STATUS_204_NO_CONTENT } from "@/constants/statusCode";
 

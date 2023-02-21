@@ -11,10 +11,10 @@ export const getIsLogin = async () => {
   }
 };
 
-const userInfoURL = "v1/tag-log/maininfo";
-export const getUserInfo = async () => {
+const mainInfoURL = "v1/tag-log/maininfo";
+export const getMainInfo = async () => {
   // const response = await instance.get<UserInfoResponse>(userInfoURL);
-  const response = await instance.get(userInfoURL);
+  const response = await instance.get(mainInfoURL);
   return response;
 };
 

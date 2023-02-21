@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import FoldCard from "@/components/home/FoldCard.vue";
 import UserNumSection from "@/components/home/UserNumSection.vue";
 import BarChartCard from "@/components/home/BarChartCard.vue";
@@ -8,20 +8,50 @@ import { Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 
-const useHour = ref(12);
-const useMinute = ref(42);
+import { homeStore } from "@/stores/home";
+
+const {
+  apiMainInfo,
+  apiAccTimes,
+  getAccDate,
+  getAccMonth,
+  getWeeklyGraph,
+  getMonthlyGraph,
+  getNumberOfPeople,
+} = homeStore();
+
+const todayAccTime = ref({
+  hour: 0,
+  minute: 0,
+});
+const monthAccTime = ref({
+  hour: 0,
+  minute: 0,
+});
+
+const getWeeklyData = ref([]);
+const getMonthlyData = ref([]);
+
+onBeforeMount(() => {
+  apiMainInfo();
+  apiAccTimes();
+  getAccDate();
+  getAccMonth();
+  getWeeklyGraph();
+  getMonthlyGraph();
+});
 </script>
 
 <template>
   <main>
-    <FoldCard :hour="useHour" :min="useMinute">
+    <FoldCard :hour="todayAccTime.hour" :min="todayAccTime.minute">
       <template #title>이용 시간</template>
     </FoldCard>
     <FoldCard
       class="m-16"
-      :hour="useHour"
-      :min="useMinute"
-      :primaryColor="true"
+      :hour="monthAccTime.hour"
+      :min="monthAccTime.minute"
+      :isMonth="true"
     >
       <template #title>월 누적 시간</template>
     </FoldCard>

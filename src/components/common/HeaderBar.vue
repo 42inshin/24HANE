@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import LogoIcon from "@/components/icons/IconLogo.vue";
 import NotificationIconFill from "@/components/icons/IconNotificationFill.vue";
 import NotificationIconLine from "@/components/icons/IconNotificationLine.vue";
+import { homeStore } from "@/stores/home";
 
-const intraId = ref("Anonymous");
+const { getUserInfo } = homeStore();
+
+const userInfo = getUserInfo();
 const isNotification = ref(false);
 </script>
 
@@ -14,7 +17,7 @@ const isNotification = ref(false);
       <div class="profileImg">
         <LogoIcon />
       </div>
-      <h2>{{ intraId }} 님</h2>
+      <h2>{{ userInfo.loginID }} 님</h2>
     </div>
     <RouterLink
       to="/notification"
