@@ -66,7 +66,11 @@ const checkColor = () => {
         <span class="timeUnit">시간</span>
       </div>
     </div>
-    <CircleProgress :percent="culculatePercent()" :goalTime="goalTime" />
+    <CircleProgress
+      :isOpen="isOpen"
+      :percent="culculatePercent()"
+      :goalTime="goalTime"
+    />
   </div>
 </template>
 

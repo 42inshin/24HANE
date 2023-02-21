@@ -21,7 +21,7 @@
   --text-gray: var(--gray);
   --text-white: var(--white);
 
-  --bar-gradation: linear-gradient(200.75deg, #8ef2f3 11.67%, #735bf2 86.56%);
+  --bar-gradation: linear-gradient(200.75deg, #9ac3f4 11.67%, #735bf2 86.56%);
   --circle-border: 16px solid;
   --circle-gradation: linear-gradient(
     200.75deg,

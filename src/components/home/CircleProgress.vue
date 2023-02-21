@@ -2,12 +2,16 @@
 import CircleProgressBg from "@/components/images/CircleProgressBg.vue";
 
 const props = defineProps<{
+  isOpen: boolean;
   percent: number;
   goalTime: number;
 }>();
 const calcLine = () => {
-  // 350은 svg의 라인 길이
+  // 350은 svg의 라인 길이 = 0
   const totalLine = 350;
+  if (!props.isOpen) {
+    return totalLine;
+  }
   const line = totalLine - (totalLine * props.percent) / 100;
   if (line < 0) return 0;
   return line;
