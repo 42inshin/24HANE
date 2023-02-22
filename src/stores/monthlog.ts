@@ -3,6 +3,18 @@ import { defineStore } from "pinia";
 import { getLogsDate, getLogsmonth } from "@/api/logsAPI";
 import type { LogsData, Log } from "@/types/logs";
 
+/*
+  localStorage에 로그 저장 방법
+  1. 월 로그 데이터를 받아와서 api 호출한 시간을 저장한 후,
+  localStorage에 암호화 해서 저장한다.
+  - 만약 복호화가 안되면, 월 api 호출을 한다.
+
+  - 만약 복호화가 되면, 로컬스토리지에서 데이터를 가져온다.
+    2. 로그 데이터를 받아올 때, localStorage에 저장된 스탬프와 비교하여 오늘의 날짜가 아니면, 월 api를 호출한다.
+    3. 로그 데이터를 받아올 때, localStorage에 저장된 스탬프와 비교하여 오늘의 날짜면 localStorage에서 데이터를 가져오고,
+    4. 오늘 날짜만 새로 갱신한다. (일 api 호출)
+*/
+
 export const useMonthLogStore = defineStore("MonthLog", () => {
   // 오늘 날짜
   const today = ref(new Date());
@@ -355,7 +367,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     const accTime = getDateAccTime(showSelectedDate());
     const hour = Math.floor(accTime);
     const min = Math.floor((accTime - hour) * 60);
-    if (hour === 0 && min === 0) return "0분";
+    // if (hour === 0 && min === 0) return "0분";
     return `${hour}시간 ${min}분`;
   };
 
@@ -384,7 +396,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     const accTime = getMonthAccTime();
     const hour = Math.floor(accTime);
     const min = Math.floor((accTime - hour) * 60);
-    if (hour === 0 && min === 0) return "0분";
+    // if (hour === 0 && min === 0) return "0분";
     return `${hour}시간 ${min}분`;
   };
 
