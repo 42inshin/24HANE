@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { getLogsDate, getLogsmonth } from "@/api/logsAPI";
 
 interface inOutLog {
   inTimeStamp: number;
@@ -22,7 +23,7 @@ interface Log {
 
 export const useMonthLogStore = defineStore("MonthLog", () => {
   // api에서 받아온 데이터
-  const logs = ref(logDatas);
+  // const logs = ref([]);
   // 오늘 날짜
   const today = ref(new Date());
   // 2023 현재 보이는 년도
@@ -39,12 +40,12 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 2023. 2 캘린더 타이틀
   const dateTitle = ref(`${year.value}. ${month.value + 1}`);
 
-  const showLogs = () => {
-    return logs.value;
-  };
-  const setLogs = (data: LogsData) => {
-    logs.value = data;
-  };
+  // const showLogs = () => {
+  //   return logs.value;
+  // };
+  // const setLogs = (data: LogsData) => {
+  //   logs.value = data;
+  // };
 
   const showToday = () => {
     return today.value;
@@ -147,6 +148,99 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return options;
   };
 
+  // 달력에 보여줄 월 리스트
+  const monthList = ref(calcOptions());
+
+  const showMonthList = () => {
+    return monthList.value;
+  };
+
+  // 월 로그들의 컨테이너
+  const logsContainer = ref(
+    monthList.value.map((option) => {
+      return {
+        date: option,
+        logs: [],
+      };
+    })
+  );
+
+  const showLogs = () => {
+    return logsContainer.value.find(
+      (log) => log.date === `${showYear()}. ${showMonth() + 1}`
+    )?.logs;
+  };
+
+  const setLogs = (data: LogsData) => {
+    logsContainer.value.map((log) => {
+      if (log.date === `${showYear()}. ${showMonth() + 1}`) {
+        log.logs = data;
+      }
+    });
+  };
+
+  const deleteTodayLogs = () => {
+    logsContainer.value.map((monthlog) => {
+      if (
+        monthlog.date ===
+        `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
+      ) {
+        console.log(monthlog);
+        monthlog.logs.inOutLogs.map((inoutLog) => {
+          const date = new Date(inoutLog.inTimeStamp).getDate();
+          if (date === today.value.getDate()) {
+            monthlog.logs.inOutLogs.splice(
+              monthlog.logs.inOutLogs.indexOf(inoutLog),
+              1
+            );
+          }
+        });
+      }
+    });
+  };
+
+  const insertTodayLogs = (data: LogsData) => {
+    logsContainer.value.map((monthlog) => {
+      if (
+        monthlog.date ===
+        `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
+      ) {
+        monthlog.logs.inOutLogs.push(...data.inOutLogs);
+        console.log(monthlog.logs);
+      }
+    });
+  };
+
+  const apiTodayData = async () => {
+    const response = await getLogsDate(
+      today.value.getFullYear(),
+      today.value.getMonth() + 1,
+      today.value.getDate()
+    );
+    deleteTodayLogs();
+    insertTodayLogs(response.data);
+    console.log(response.data);
+  };
+
+  // 월 로그 데이터 가져오기
+  // 로그가 없으면 apiLogsMonthData 호출
+  // 로그가 있으면 로그 컨테이너에서 가져오기
+  // 로그가 있으면서 오늘 날짜면 apiTodayData 호출
+  const apiLogsMonthData = async () => {
+    if (
+      logsContainer.value.find(
+        (log) => log.date === `${showYear()}. ${showMonth() + 1}`
+      )?.logs.length !== 0
+    ) {
+      if (month.value === today.value.getMonth()) {
+        apiTodayData();
+      }
+      return;
+    }
+    const response = await getLogsmonth(year.value, month.value + 1);
+    setLogs(response.data);
+  };
+
   // 이전 달 버튼 클릭
   const prevMonth = () => {
     if (year.value === 2022 && month.value <= 7) return;
@@ -159,6 +253,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     calcFirstDay();
     calcLastDate();
     setDateTitle();
+    apiLogsMonthData();
   };
 
   // 다음 달 버튼 클릭
@@ -177,6 +272,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     calcFirstDay();
     calcLastDate();
     setDateTitle();
+    apiLogsMonthData();
   };
 
   // 일별 누적시간 색상 컬러셋
@@ -198,6 +294,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return DATE_BG_COLOR[1];
   };
 
+  // 선택한 날짜의 로그 테이블
   const viewLogs = ref<Log[]>([]);
 
   const setDisit: string = (num: number) => {
@@ -212,9 +309,12 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return `${setDisit(hour)}:${setDisit(min)}:${setDisit(sec)}`;
   };
 
+  // 선택한 일의 log 테이블 생성
   const getDateLogs: Log[] = () => {
     const tempLogs: Log[] = [];
-    logs.value.inOutLogs.forEach((log) => {
+    const logs = showLogs();
+    if (logs.length === 0) return tempLogs;
+    logs.inOutLogs.forEach((log) => {
       const inLogTime = new Date(log.inTimeStamp * 1000);
       const outLogTime = new Date(log.outTimeStamp * 1000);
       const accLogTime = log.durationSecond;
@@ -248,7 +348,9 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 일별 누적시간 계산
   const getDateAccTime = (date: number) => {
     let duration = 0;
-    logs.value.inOutLogs.forEach((log) => {
+    const logs = showLogs();
+    if (logs.length === 0) return duration;
+    logs.inOutLogs.forEach((log) => {
       const logTime = new Date(log.inTimeStamp * 1000);
       const LogYear = logTime.getFullYear();
       const logMonth = logTime.getMonth();
@@ -278,7 +380,9 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 선택된 월의 누적시간 계산
   const getMonthAccTime = () => {
     let duration = 0;
-    logs.value.inOutLogs.forEach((log) => {
+    const logs = showLogs();
+    if (logs.length === 0) return duration;
+    logs.inOutLogs.forEach((log) => {
       const inTime = new Date(log.inTimeStamp * 1000);
       const LogYear = inTime.getFullYear();
       const logMonth = inTime.getMonth();
@@ -326,19 +430,28 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 캘린더 제목으로 월 선택 시
   const selectMonth = () => {
     const dateArr = showDateTitle().split(". ");
-    year.value = Number(dateArr[0]);
-    month.value = Number(dateArr[1]) - 1;
-    setSelectedDate(1);
-    calcFirstDay();
-    calcLastDate();
+    if (
+      year.value !== Number(dateArr[0]) ||
+      month.value !== Number(dateArr[1]) - 1
+    ) {
+      year.value = Number(dateArr[0]);
+      month.value = Number(dateArr[1]) - 1;
+      setSelectedDate(1);
+      calcFirstDay();
+      calcLastDate();
+      apiLogsMonthData();
+    }
   };
 
   return {
     showLogs,
     setLogs,
+    apiTodayData,
+    apiLogsMonthData,
     showToday,
     showYear,
     showMonth,
+    showMonthList,
     showLastDate,
     showDay,
     showSelectedDate,
@@ -360,101 +473,3 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     selectMonth,
   };
 });
-
-const logDatas: LogsData = {
-  login: "inshin",
-  profileImage:
-    "https://cdn.intra.42.fr/users/04ba9ce3bea8ac58a3ff7c7bd55af2fc/inshin.jpg",
-  inOutLogs: [
-    {
-      inTimeStamp: 1676699708,
-      outTimeStamp: 1676704765,
-      durationSecond: 5057,
-    },
-    {
-      inTimeStamp: 1676608040,
-      outTimeStamp: 1676629116,
-      durationSecond: 21076,
-    },
-    {
-      inTimeStamp: 1676606223,
-      outTimeStamp: 1676607054,
-      durationSecond: 831,
-    },
-    {
-      inTimeStamp: 1676592228,
-      outTimeStamp: 1676603885,
-      durationSecond: 11657,
-    },
-    {
-      inTimeStamp: 1676516373,
-      outTimeStamp: 1676549277,
-      durationSecond: 32904,
-    },
-    {
-      inTimeStamp: 1676511176,
-      outTimeStamp: 1676513849,
-      durationSecond: 2673,
-    },
-    {
-      inTimeStamp: 1676454077,
-      outTimeStamp: 1676470213,
-      durationSecond: 16136,
-    },
-    {
-      inTimeStamp: 1676433448,
-      outTimeStamp: 1676451942,
-      durationSecond: 18494,
-    },
-    {
-      inTimeStamp: 1676426980,
-      outTimeStamp: 1676432485,
-      durationSecond: 5505,
-    },
-    {
-      inTimeStamp: 1676364497,
-      outTimeStamp: 1676382381,
-      durationSecond: 17884,
-    },
-    {
-      inTimeStamp: 1676346280,
-      outTimeStamp: 1676363269,
-      durationSecond: 16989,
-    },
-    {
-      inTimeStamp: 1676340730,
-      outTimeStamp: 1676343573,
-      durationSecond: 2843,
-    },
-    {
-      inTimeStamp: 1676334865,
-      outTimeStamp: 1676340012,
-      durationSecond: 5147,
-    },
-    {
-      inTimeStamp: 1676280346,
-      outTimeStamp: 1676296930,
-      durationSecond: 16584,
-    },
-    {
-      inTimeStamp: 1676266477,
-      outTimeStamp: 1676279805,
-      durationSecond: 13328,
-    },
-    {
-      inTimeStamp: 1675488017,
-      outTimeStamp: 1675514746,
-      durationSecond: 26729,
-    },
-    {
-      inTimeStamp: 1675413819,
-      outTimeStamp: 1675430916,
-      durationSecond: 17097,
-    },
-    {
-      inTimeStamp: 1675400333,
-      outTimeStamp: 1675412926,
-      durationSecond: 12593,
-    },
-  ],
-};

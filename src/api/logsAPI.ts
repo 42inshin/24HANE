@@ -13,7 +13,7 @@ export type InOutLog = {
 };
 
 const getLogsDayURL = "v1/tag-log/perday";
-export const getLogsDay = async (year: number, month: number, day: number) => {
+export const getLogsDate = async (year: number, month: number, day: number) => {
   const response = await instance.get(getLogsDayURL, {
     params: {
       year,
@@ -32,17 +32,5 @@ export const getLogsmonth = async (year: number, month: number) => {
       month,
     },
   });
-  return response;
-};
-
-const getLogsMainInfoURL = "v1/tag-log/maininfo";
-export const getLogsMainInfo = async () => {
-  const response = await instance.get(getLogsMainInfoURL);
-  return response;
-};
-
-const getLogsAccumulationTimesURL = "v1/tag-log/accumulationTimes";
-export const getLogsAccumulationTimes = async () => {
-  const response = await instance.get(getLogsAccumulationTimesURL);
   return response;
 };

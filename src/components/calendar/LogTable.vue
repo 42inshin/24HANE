@@ -7,11 +7,16 @@ const {
   showSelectedDate,
   showSelectedDateText,
   showMonth,
+  showLogs,
 } = useMonthLogStore();
 
 const logs = ref(showDataLogs());
 
 watch(showSelectedDate, () => {
+  logs.value = showDataLogs();
+});
+
+watch(showLogs, () => {
   logs.value = showDataLogs();
 });
 

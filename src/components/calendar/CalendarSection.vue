@@ -4,6 +4,7 @@ import CalWeek from "@/components/calendar/CalWeek.vue";
 import AccMonth from "@/components/calendar/AccMonth.vue";
 import LogTable from "@/components/calendar/LogTable.vue";
 import { useMonthLogStore } from "@/stores/monthlog";
+import { onBeforeMount, ref, watch } from "vue";
 
 const monthLog = useMonthLogStore();
 const {
@@ -14,11 +15,26 @@ const {
   getDateColor,
   setSelectedDate,
   checkToday,
+  apiLogsMonthData,
 } = monthLog;
+
+onBeforeMount(() => {
+  apiLogsMonthData();
+});
 
 const clickDate = (date: number) => {
   setSelectedDate(date);
+  console.log(date);
 };
+
+const lastDate = ref(showLastDate());
+const day = ref(showDay());
+watch(showLastDate, (val) => {
+  lastDate.value = val;
+});
+watch(showDay, (val) => {
+  day.value = val;
+});
 </script>
 
 <template>
@@ -27,9 +43,9 @@ const clickDate = (date: number) => {
     <div class="calendar">
       <CalWeek />
       <div class="days">
-        <div v-for="day in showDay()" :key="day" class="noday"></div>
+        <div v-for="i in day" :key="i" class="noday"></div>
         <div
-          v-for="date in showLastDate()"
+          v-for="date in lastDate"
           :key="date"
           @click="($event) => clickDate(date)"
           class="day tapHighlight"
@@ -73,7 +89,7 @@ const clickDate = (date: number) => {
   height: 30px;
   border-radius: 10px;
   margin: 0 auto;
-  transition: border-radius 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .today {
