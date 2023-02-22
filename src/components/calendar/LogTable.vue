@@ -8,9 +8,11 @@ const {
   showSelectedDateText,
   showMonth,
   showLogs,
+  showIsLoading,
 } = useMonthLogStore();
 
 const logs = ref(showDataLogs());
+const isLoading = ref(showIsLoading());
 
 watch(showSelectedDate, () => {
   logs.value = showDataLogs();
@@ -18,6 +20,10 @@ watch(showSelectedDate, () => {
 
 watch(showLogs, () => {
   logs.value = showDataLogs();
+});
+
+watch(showIsLoading, (val) => {
+  isLoading.value = val;
 });
 
 const calcHeight = () => {
@@ -48,7 +54,10 @@ watch(showMonth, () => {
         <li>퇴실</li>
         <li>체류시간</li>
       </ul>
-      <ul class="logs">
+      <ul class="logs" v-if="isLoading">
+        <li class="log logEmpty">기록이 없습니다.</li>
+      </ul>
+      <ul class="logs" v-else>
         <li v-for="(log, i) in logs" :key="i" class="log">
           <div class="inLogTime">{{ log.inLogTime }}</div>
           <div class="outLogTime">{{ log.outLogTime }}</div>

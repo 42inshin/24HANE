@@ -13,6 +13,8 @@ import type { LogsData, Log } from "@/types/logs";
     2. 로그 데이터를 받아올 때, localStorage에 저장된 스탬프와 비교하여 오늘의 날짜가 아니면, 월 api를 호출한다.
     3. 로그 데이터를 받아올 때, localStorage에 저장된 스탬프와 비교하여 오늘의 날짜면 localStorage에서 데이터를 가져오고,
     4. 오늘 날짜만 새로 갱신한다. (일 api 호출)
+
+    일어날 수 있는 문제점
 */
 
 export const useMonthLogStore = defineStore("MonthLog", () => {
@@ -29,6 +31,12 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 선택한 일
   const selectDate = ref(today.value.getDate());
 
+  // 로딩 여부
+  const isLoading = ref(false);
+
+  const showIsLoading = () => {
+    return isLoading.value;
+  };
   // 2023. 2 캘린더 타이틀
   const dateTitle = ref(`${year.value}. ${month.value + 1}`);
 
@@ -201,6 +209,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
 
   // 오늘 날짜 로그 api 호출
   const apiTodayData = async () => {
+    isLoading.value = true;
     const { data: logsData }: LogsData = await getLogsDate(
       today.value.getFullYear(),
       today.value.getMonth() + 1,
@@ -209,6 +218,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     deleteTodayLogs();
     insertTodayLogs(logsData);
     console.log(logsData);
+    isLoading.value = false;
   };
 
   // 월 로그 api 호출
@@ -228,11 +238,13 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
       return;
     }
     console.log("월 정보 호출");
+    isLoading.value = true;
     const { data: monthData }: LogsData = await getLogsmonth(
       year.value,
       month.value + 1
     );
     setLogs(monthData);
+    isLoading.value = false;
   };
 
   // 이전 달 버튼 클릭
@@ -438,6 +450,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   };
 
   return {
+    showIsLoading,
     showLogs,
     setLogs,
     apiTodayData,

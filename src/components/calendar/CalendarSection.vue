@@ -3,6 +3,7 @@ import CalPagination from "@/components/calendar/CalPagination.vue";
 import CalWeek from "@/components/calendar/CalWeek.vue";
 import AccMonth from "@/components/calendar/AccMonth.vue";
 import LogTable from "@/components/calendar/LogTable.vue";
+import LoadingAnimation from "@/components/common/LoadingAnimation.vue";
 import { useMonthLogStore } from "@/stores/monthlog";
 import { onBeforeMount, ref, watch } from "vue";
 
@@ -16,6 +17,7 @@ const {
   setSelectedDate,
   checkToday,
   apiLogsMonthData,
+  showIsLoading,
 } = monthLog;
 
 onBeforeMount(() => {
@@ -28,11 +30,17 @@ const clickDate = (date: number) => {
 
 const lastDate = ref(showLastDate());
 const day = ref(showDay());
+const isLoading = ref(showIsLoading());
+
 watch(showLastDate, (val) => {
   lastDate.value = val;
 });
 watch(showDay, (val) => {
   day.value = val;
+});
+
+watch(showIsLoading, (val) => {
+  isLoading.value = val;
 });
 </script>
 
@@ -41,7 +49,10 @@ watch(showDay, (val) => {
     <CalPagination />
     <div class="calendar">
       <CalWeek />
-      <div class="days">
+      <div v-if="isLoading" class="loading">
+        <LoadingAnimation />
+      </div>
+      <div v-else class="days">
         <div v-for="i in day" :key="i" class="noday"></div>
         <div
           v-for="date in lastDate"
@@ -67,6 +78,10 @@ watch(showDay, (val) => {
 </template>
 
 <style scoped>
+.loading {
+  height: 190px;
+}
+
 .days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -88,7 +103,7 @@ watch(showDay, (val) => {
   height: 30px;
   border-radius: 10px;
   margin: 0 auto;
-  transition: all 0.2s ease-in-out;
+  transition: border-radius 0.2s ease-in-out;
 }
 
 .today {
