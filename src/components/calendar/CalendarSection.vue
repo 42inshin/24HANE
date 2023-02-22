@@ -24,7 +24,6 @@ onBeforeMount(() => {
 
 const clickDate = (date: number) => {
   setSelectedDate(date);
-  console.log(date);
 };
 
 const lastDate = ref(showLastDate());

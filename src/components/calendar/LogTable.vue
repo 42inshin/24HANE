@@ -23,7 +23,6 @@ watch(showLogs, () => {
 const calcHeight = () => {
   const days = document.querySelector(".days");
   const daysHeight = days?.clientHeight;
-  console.log(daysHeight);
   const logs = document.querySelector(".logs");
   if (daysHeight && daysHeight > 190) {
     logs?.classList.add("smaller");

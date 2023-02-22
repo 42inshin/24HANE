@@ -1,29 +1,9 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { getLogsDate, getLogsmonth } from "@/api/logsAPI";
-
-interface inOutLog {
-  inTimeStamp: number;
-  outTimeStamp: number;
-  durationSecond: number;
-}
-
-interface LogsData {
-  login: string;
-  profileImage: string;
-  inOutLogs: inOutLog[];
-}
-
-// 일별 로그타임 계산
-interface Log {
-  inLogTime: string;
-  outLogTime: string;
-  accLogTime: string;
-}
+import type { LogsData, Log } from "@/types/logs";
 
 export const useMonthLogStore = defineStore("MonthLog", () => {
-  // api에서 받아온 데이터
-  // const logs = ref([]);
   // 오늘 날짜
   const today = ref(new Date());
   // 2023 현재 보이는 년도
@@ -39,13 +19,6 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
 
   // 2023. 2 캘린더 타이틀
   const dateTitle = ref(`${year.value}. ${month.value + 1}`);
-
-  // const showLogs = () => {
-  //   return logs.value;
-  // };
-  // const setLogs = (data: LogsData) => {
-  //   logs.value = data;
-  // };
 
   const showToday = () => {
     return today.value;
@@ -148,7 +121,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return options;
   };
 
-  // 달력에 보여줄 월 리스트
+  // 달력에 보여줄 월 리스트 (2022. 8 ~ 2023. 현재 월)
   const monthList = ref(calcOptions());
 
   const showMonthList = () => {
@@ -165,12 +138,14 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     })
   );
 
+  // 보고 있는 월 로그들 가져오기
   const showLogs = () => {
     return logsContainer.value.find(
       (log) => log.date === `${showYear()}. ${showMonth() + 1}`
     )?.logs;
   };
 
+  // 보고 있는 월 로그 세팅하기
   const setLogs = (data: LogsData) => {
     logsContainer.value.map((log) => {
       if (log.date === `${showYear()}. ${showMonth() + 1}`) {
@@ -179,6 +154,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     });
   };
 
+  // 금 월의 오늘 로그 삭제하기
   const deleteTodayLogs = () => {
     logsContainer.value.map((monthlog) => {
       if (
@@ -199,6 +175,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     });
   };
 
+  // 금 월의 오늘 로그 추가하기
   const insertTodayLogs = (data: LogsData) => {
     logsContainer.value.map((monthlog) => {
       if (
@@ -206,23 +183,23 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
         `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
       ) {
         monthlog.logs.inOutLogs.push(...data.inOutLogs);
-        console.log(monthlog.logs);
       }
     });
   };
 
+  // 오늘 날짜 로그 api 호출
   const apiTodayData = async () => {
-    const response = await getLogsDate(
+    const { data: logsData }: LogsData = await getLogsDate(
       today.value.getFullYear(),
       today.value.getMonth() + 1,
       today.value.getDate()
     );
     deleteTodayLogs();
-    insertTodayLogs(response.data);
-    console.log(response.data);
+    insertTodayLogs(logsData);
+    console.log(logsData);
   };
 
-  // 월 로그 데이터 가져오기
+  // 월 로그 api 호출
   // 로그가 없으면 apiLogsMonthData 호출
   // 로그가 있으면 로그 컨테이너에서 가져오기
   // 로그가 있으면서 오늘 날짜면 apiTodayData 호출
@@ -232,13 +209,18 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
         (log) => log.date === `${showYear()}. ${showMonth() + 1}`
       )?.logs.length !== 0
     ) {
-      if (month.value === today.value.getMonth()) {
+      if (showMonth() === today.value.getMonth()) {
+        console.log("오늘 정보 호출");
         apiTodayData();
       }
       return;
     }
-    const response = await getLogsmonth(year.value, month.value + 1);
-    setLogs(response.data);
+    console.log("월 정보 호출");
+    const { data: monthData }: LogsData = await getLogsmonth(
+      year.value,
+      month.value + 1
+    );
+    setLogs(monthData);
   };
 
   // 이전 달 버튼 클릭
