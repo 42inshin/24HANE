@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import { useMonthLogStore } from "@/stores/monthlog";
-const { getMonthAccTimeText } = useMonthLogStore();
+import { ref, watch } from "vue";
+const { getMonthAccTimeText, showLogs } = useMonthLogStore();
+
+const monthText = ref(getMonthAccTimeText());
+
+watch(showLogs, () => {
+  monthText.value = getMonthAccTimeText();
+  console.log("총 월 시간 왓치 동작!");
+});
 </script>
 
 <template>
-  <div class="month">총 {{ getMonthAccTimeText() }}</div>
+  <div class="month">총 {{ monthText }}</div>
 </template>
 
 <style scoped>
