@@ -16,3 +16,13 @@ export interface Log {
   outLogTime: string;
   accLogTime: string;
 }
+
+export interface UserAccTime {
+  todayAccumationTime: number;
+  monthAccumationTime: number;
+}
+
+export interface PeriodData {
+  periods: string;
+  total: number;
+}

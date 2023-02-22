@@ -1,7 +1,8 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { getMainInfo, getAccTimes } from "@/api/userAPI";
-import type { UserInfo, UserAccTime, MainInfo, PeriodData } from "@/types/user";
+import type { UserInfo, MainInfo } from "@/types/user";
+import type { UserAccTime, PeriodData } from "@/types/logs";
 
 export const homeStore = defineStore("home", () => {
   const userInfo: UserInfo = ref({
