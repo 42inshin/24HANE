@@ -58,27 +58,27 @@ export const homeStore = defineStore("home", () => {
   const monthlyGraph: PeriodData[] = ref(dumyData);
 
   const getUserInfo = () => {
-    return userInfo;
+    return userInfo.value;
   };
 
   const getAccDate = () => {
-    return accDate;
+    return accDate.value;
   };
 
   const getAccMonth = () => {
-    return accMonth;
+    return accMonth.value;
   };
 
   const getNumberOfPeople = () => {
-    return numberOfPeople;
+    return numberOfPeople.value;
   };
 
   const getWeeklyGraph = () => {
-    return weeklyGraph;
+    return weeklyGraph.value;
   };
 
   const getMonthlyGraph = () => {
-    return monthlyGraph;
+    return monthlyGraph.value;
   };
 
   /*  {

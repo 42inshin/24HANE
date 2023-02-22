@@ -2,64 +2,11 @@
 import type { PeriodData } from "@/types/user";
 import { ref, computed } from "vue";
 
-// const props = defineProps<{
-//   periodsData?: PeriodData[];
-// }>();
+const props = defineProps<{
+  periodsData: PeriodData[];
+}>();
 
-const dumyData: PeriodData[] = [
-  {
-    periods: "없음",
-    total: 0,
-  },
-  {
-    periods: "없음",
-    total: 0,
-  },
-  {
-    periods: "없음",
-    total: 0,
-  },
-  {
-    periods: "없음",
-    total: 0,
-  },
-  {
-    periods: "없음",
-    total: 0,
-  },
-  {
-    periods: "없음",
-    total: 0,
-  },
-];
-const periodsData = ref(dumyData);
-// const periodsData = ref(props.periodsData);
-// const periodsData = ref([
-//   {
-//     periods: "2.12(월) - 2.18(일)",
-//     total: 50,
-//   },
-//   {
-//     periods: "2.5(월) - 2.11(일)",
-//     total: 31,
-//   },
-//   {
-//     periods: "1.29(월) - 2.4(일)",
-//     total: 22,
-//   },
-//   {
-//     periods: "2.22(월) - 2.28(일)",
-//     total: 10,
-//   },
-//   {
-//     periods: "2.15(월) - 2.21(일)",
-//     total: 42,
-//   },
-//   {
-//     periods: "2.8(월) - 2.14(일)",
-//     total: 38,
-//   },
-// ]);
+const periodsData = ref(props.periodsData);
 
 const timeArr = computed(() => {
   const arr: number[] = [];

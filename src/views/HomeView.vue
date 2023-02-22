@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import FoldCard from "@/components/home/FoldCard.vue";
 import UserNumSection from "@/components/home/UserNumSection.vue";
 import BarChartCard from "@/components/home/BarChartCard.vue";
@@ -20,26 +20,55 @@ const {
   getNumberOfPeople,
 } = homeStore();
 
-const todayAccTime = ref({
-  hour: 0,
-  minute: 0,
-});
-const monthAccTime = ref({
-  hour: 0,
-  minute: 0,
-});
-
-const getWeeklyData = ref([]);
-const getMonthlyData = ref([]);
-
 onBeforeMount(() => {
   apiMainInfo();
   apiAccTimes();
-  getAccDate();
-  getAccMonth();
-  getWeeklyGraph();
-  getMonthlyGraph();
 });
+
+const todayAccTime = ref(getAccDate());
+const monthAccTime = ref(getAccMonth());
+const getWeeklyData = ref(getWeeklyGraph());
+const getMonthlyData = ref(getMonthlyGraph());
+const numberOfPeople = ref(getNumberOfPeople());
+
+watch(
+  () => getAccDate(),
+  () => {
+    todayAccTime.value = getAccDate();
+    console.log("오늘 누적", todayAccTime.value);
+  }
+);
+
+watch(
+  () => getAccMonth(),
+  () => {
+    monthAccTime.value = getAccMonth();
+    console.log("월 누적", monthAccTime.value);
+  }
+);
+
+watch(
+  () => getWeeklyGraph(),
+  () => {
+    getWeeklyData.value = getWeeklyGraph();
+    console.log("주간 그래프", getWeeklyData.value);
+  }
+);
+
+watch(
+  () => getMonthlyGraph(),
+  () => {
+    getMonthlyData.value = getMonthlyGraph();
+    console.log("월간 그래프", getMonthlyData.value);
+  }
+);
+
+watch(
+  () => getNumberOfPeople(),
+  () => {
+    numberOfPeople.value = getNumberOfPeople();
+  }
+);
 </script>
 
 <template>
@@ -63,13 +92,19 @@ onBeforeMount(() => {
       :modules="[Pagination]"
     >
       <swiper-slide>
-        <BarChartCard class="m-16 slide"></BarChartCard>
+        <BarChartCard
+          class="m-16 slide"
+          :periodsData="getWeeklyData"
+        ></BarChartCard>
       </swiper-slide>
       <swiper-slide>
-        <BarChartCard class="m-16 slide"></BarChartCard>
+        <BarChartCard
+          class="m-16 slide"
+          :periodsData="getMonthlyData"
+        ></BarChartCard>
       </swiper-slide>
     </swiper>
-    <UserNumSection />
+    <UserNumSection :numberOfPeople="numberOfPeople" />
   </main>
 </template>
 

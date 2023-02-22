@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import LogoIcon from "@/components/icons/IconLogo.vue";
 import NotificationIconFill from "@/components/icons/IconNotificationFill.vue";
 import NotificationIconLine from "@/components/icons/IconNotificationLine.vue";
@@ -7,8 +7,15 @@ import { homeStore } from "@/stores/home";
 
 const { getUserInfo } = homeStore();
 
-const userInfo = getUserInfo();
+const userInfo = ref(getUserInfo());
 const isNotification = ref(false);
+
+watch(
+  () => getUserInfo(),
+  () => {
+    userInfo.value = getUserInfo();
+  }
+);
 </script>
 
 <template>
