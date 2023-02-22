@@ -92,6 +92,7 @@ watch(showMonth, () => {
   padding: 0;
   font-size: 0.875rem;
   margin-bottom: 8px;
+  padding: 0 10px;
 }
 .logTitle li {
   list-style: none;
@@ -108,6 +109,7 @@ watch(showMonth, () => {
   scrollbar-width: none;
   -ms-overflow-style: none;
   height: calc(100vh - 514px);
+  padding: 0 10px;
 }
 
 .logs.smaller {
