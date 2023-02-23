@@ -24,10 +24,10 @@ instance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === STATUS_401_UNAUTHORIZED) {
-      localStorage.removeItem("isLogin");
       removeCookie();
+      localStorage.removeItem("isLogin");
       window.location.href = "/";
-      // alert(error.response.data.message);
+      alert("로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");
       //로그인이 필요합니다.
     }
     return Promise.reject(error);
