@@ -3,12 +3,13 @@ import VIcon from "@/components/icons/IconChevron.vue";
 const props = defineProps<{
   title: string;
   backButton?: boolean;
+  path?: string;
 }>();
 </script>
 
 <template>
   <div class="wrap" :class="{ backButton: backButton }">
-    <router-link v-if="props.backButton" to="home">
+    <router-link v-if="props.backButton" :to="path ?? 'home'">
       <VIcon :color="`var(--color-vbutton)`" class="vIcon" />
     </router-link>
     <h2>{{ props.title }}</h2>
