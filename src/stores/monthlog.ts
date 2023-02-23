@@ -209,7 +209,6 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
 
   // 오늘 날짜 로그 api 호출
   const apiTodayData = async () => {
-    isLoading.value = true;
     const { data: logsData }: LogsData = await getLogsDate(
       today.value.getFullYear(),
       today.value.getMonth() + 1,
@@ -218,7 +217,6 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     deleteTodayLogs();
     insertTodayLogs(logsData);
     console.log(logsData);
-    isLoading.value = false;
   };
 
   // 월 로그 api 호출
