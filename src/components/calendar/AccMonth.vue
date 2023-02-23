@@ -12,7 +12,7 @@ watch(showLogs, () => {
 </script>
 
 <template>
-  <div class="month">총 {{ monthText }}</div>
+  <div class="month">총 {{ monthText.hour }}시간 {{ monthText.minute }}분</div>
 </template>
 
 <style scoped>

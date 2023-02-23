@@ -165,6 +165,14 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     )?.logs;
   };
 
+  const showNowMonthLogs = () => {
+    const todayYear = today.value.getFullYear();
+    const todayMonth = today.value.getMonth();
+    return logsContainer.value.find(
+      (log) => log.date === `${todayYear}. ${todayMonth + 1}`
+    )?.logs;
+  };
+
   // 보고 있는 월 로그 세팅하기
   const setLogs = (data: LogsData) => {
     logsContainer.value.map((log) => {
@@ -243,6 +251,30 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     );
     setLogs(monthData);
     isLoading.value = false;
+  };
+
+  const apiLogsNowMonthData = async () => {
+    isLoading.value = true;
+    if (
+      logsContainer.value.find(
+        (log) =>
+          log.date ===
+          `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
+      )?.logs.length !== 0
+    ) {
+      apiTodayData();
+      console.log("오늘 데이터 호출");
+      isLoading.value = false;
+      return;
+    }
+    isLoading.value = true;
+    const { data: monthData }: LogsData = await getLogsmonth(
+      today.value.getFullYear(),
+      today.value.getMonth() + 1
+    );
+    setLogs(monthData);
+    isLoading.value = false;
+    console.log("이번달 데이터 호출");
   };
 
   // 이전 달 버튼 클릭
@@ -372,6 +404,30 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return duration / 3600;
   };
 
+  const getNowDateAccTime = () => {
+    let duration = 0;
+    const logs = showNowMonthLogs();
+    if (logs.length === 0) return duration;
+    const todayYear = today.value.getFullYear();
+    const todayMonth = today.value.getMonth();
+    const todayDate = today.value.getDate();
+    logs.inOutLogs.forEach((log) => {
+      const logTime = new Date(log.inTimeStamp * 1000);
+      const LogYear = logTime.getFullYear();
+      const logMonth = logTime.getMonth();
+      const logDate = logTime.getDate();
+      if (
+        LogYear === todayYear &&
+        logMonth === todayMonth &&
+        logDate === todayDate
+      ) {
+        duration += log.durationSecond;
+      }
+    });
+    console.log("duration", duration);
+    return duration / 3600;
+  };
+
   // 선택된 날짜의 누적시간 계산
   const getSelectedDateAccTimeText = () => {
     const accTime = getDateAccTime(showSelectedDate());
@@ -379,6 +435,16 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     const min = Math.floor((accTime - hour) * 60);
     // if (hour === 0 && min === 0) return "0분";
     return `${hour}시간 ${min}분`;
+  };
+
+  const getNowDateAccTimeText = () => {
+    const accTime = getNowDateAccTime();
+    const hour = Math.floor(accTime);
+    const min = Math.floor((accTime - hour) * 60);
+    return {
+      hour: hour,
+      minute: min,
+    };
   };
 
   // 선택된 월의 누적시간 계산
@@ -401,13 +467,47 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return duration / 3600;
   };
 
+  // 입력한 날짜의 누적시간 계산
+  const getNowMonthAccTime = () => {
+    let duration = 0;
+    const logs = showNowMonthLogs();
+    if (logs.length === 0) return duration;
+    logs.inOutLogs.forEach((log) => {
+      const inTime = new Date(log.inTimeStamp * 1000);
+      const LogYear = inTime.getFullYear();
+      const logMonth = inTime.getMonth();
+      if (
+        !!log.outTimeStamp &&
+        LogYear === showYear() &&
+        logMonth === showMonth()
+      ) {
+        duration += log.durationSecond;
+      }
+    });
+    return duration / 3600;
+  };
+
   // 선택된 월의 누적시간 텍스트
   const getMonthAccTimeText = () => {
     const accTime = getMonthAccTime();
     const hour = Math.floor(accTime);
     const min = Math.floor((accTime - hour) * 60);
     // if (hour === 0 && min === 0) return "0분";
-    return `${hour}시간 ${min}분`;
+    // return `${hour}시간 ${min}분`;
+    return {
+      hour: hour,
+      minute: min,
+    };
+  };
+
+  const getNowMonthAccTimeText = () => {
+    const accTime = getNowMonthAccTime();
+    const hour = Math.floor(accTime);
+    const min = Math.floor((accTime - hour) * 60);
+    return {
+      hour: hour,
+      minute: min,
+    };
   };
 
   // 캘린더 날짜 색상
@@ -451,7 +551,9 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     showIsLoading,
     showLogs,
     setLogs,
+    showNowMonthLogs,
     apiTodayData,
+    apiLogsNowMonthData,
     apiLogsMonthData,
     showToday,
     showYear,
@@ -465,6 +567,8 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     showSelectedDateText,
     getSelectedDateAccTimeText,
     getMonthAccTimeText,
+    getNowDateAccTimeText,
+    getNowMonthAccTimeText,
     showDataLogs,
     dateTitle,
     showDateTitle,

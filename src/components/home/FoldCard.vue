@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 import ChevronIcon from "@/components/icons/IconChevron.vue";
 import CircleProgress from "@/components/home/CircleProgress.vue";
 import LoadingAnimationVue from "@/components/common/LoadingAnimation.vue";
-import { useHomeStore } from "@/stores/home";
+import { useMonthLogStore } from "@/stores/monthlog";
 
 const props = defineProps<{
   hour: number;
@@ -11,15 +11,15 @@ const props = defineProps<{
   isMonth?: boolean;
 }>();
 
-const homeStore = useHomeStore();
-const { getIsLoading } = homeStore;
-const isLoading = ref(getIsLoading());
+const monthStore = useMonthLogStore();
+const { showIsLoading } = monthStore;
+const isLoading = ref(showIsLoading());
 
 const isOpen = ref(false);
 const goalTime = ref(0);
 const colorSet = ref(props.isMonth);
 
-watch(getIsLoading, (val) => {
+watch(showIsLoading, (val) => {
   isLoading.value = val;
 });
 
@@ -146,7 +146,7 @@ const checkColor = () => {
 
 .loading .wrap {
   width: 100px;
-  height: 20px;
+  height: 27px;
   padding: 0;
   background-color: transparent;
 }

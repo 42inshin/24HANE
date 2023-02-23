@@ -9,43 +9,41 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import { useHomeStore } from "@/stores/home";
+import { useMonthLogStore } from "@/stores/monthlog";
+
+const { apiMainInfo, getWeeklyGraph, getMonthlyGraph, getNumberOfPeople } =
+  useHomeStore();
 
 const {
-  apiMainInfo,
-  apiAccTimes,
-  getAccDate,
-  getAccMonth,
-  getWeeklyGraph,
-  getMonthlyGraph,
-  getNumberOfPeople,
-} = useHomeStore();
+  apiLogsNowMonthData,
+  getNowMonthAccTimeText,
+  getNowDateAccTimeText,
+  showNowMonthLogs,
+} = useMonthLogStore();
 
 onBeforeMount(() => {
   apiMainInfo();
-  apiAccTimes();
+  apiLogsNowMonthData();
 });
 
-const todayAccTime = ref(getAccDate());
-const monthAccTime = ref(getAccMonth());
+const todayAccTime = ref(getNowDateAccTimeText());
+const monthAccTime = ref(getNowMonthAccTimeText());
 const getWeeklyData = ref(getWeeklyGraph());
 const getMonthlyData = ref(getMonthlyGraph());
 const numberOfPeople = ref(getNumberOfPeople());
 
 watch(
-  () => getAccDate(),
+  () => showNowMonthLogs(),
   () => {
-    todayAccTime.value = getAccDate();
+    todayAccTime.value = getNowDateAccTimeText();
     console.log("오늘 누적", todayAccTime.value);
   }
 );
 
-watch(
-  () => getAccMonth(),
-  () => {
-    monthAccTime.value = getAccMonth();
-    console.log("월 누적", monthAccTime.value);
-  }
-);
+watch(showNowMonthLogs, () => {
+  monthAccTime.value = getNowMonthAccTimeText();
+  console.log("월 누적", monthAccTime.value);
+});
 
 watch(
   () => getWeeklyGraph(),
