@@ -472,14 +472,16 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     let duration = 0;
     const logs = showNowMonthLogs();
     if (logs.length === 0) return duration;
+    const todayYear = today.value.getFullYear();
+    const todayMonth = today.value.getMonth();
     logs.inOutLogs.forEach((log) => {
       const inTime = new Date(log.inTimeStamp * 1000);
       const LogYear = inTime.getFullYear();
       const logMonth = inTime.getMonth();
       if (
         !!log.outTimeStamp &&
-        LogYear === showYear() &&
-        logMonth === showMonth()
+        LogYear === todayYear &&
+        logMonth === todayMonth
       ) {
         duration += log.durationSecond;
       }
@@ -502,6 +504,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
 
   const getNowMonthAccTimeText = () => {
     const accTime = getNowMonthAccTime();
+    console.log("[accTime]", accTime);
     const hour = Math.floor(accTime);
     const min = Math.floor((accTime - hour) * 60);
     return {

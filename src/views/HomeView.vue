@@ -40,10 +40,13 @@ watch(
   }
 );
 
-watch(showNowMonthLogs, () => {
-  monthAccTime.value = getNowMonthAccTimeText();
-  console.log("월 누적", monthAccTime.value);
-});
+watch(
+  () => showNowMonthLogs(),
+  () => {
+    monthAccTime.value = getNowMonthAccTimeText();
+    console.log("월 누적시간", monthAccTime.value);
+  }
+);
 
 watch(
   () => getWeeklyGraph(),

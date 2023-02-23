@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { ref } from "vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="wrap">
@@ -22,7 +20,6 @@ import { ref } from "vue";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--divider);
   background-color: var(--gray-soft);
   animation: loading 1.2s infinite ease-in;
   animation-delay: 0.4s;
@@ -35,7 +32,6 @@ import { ref } from "vue";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--divider);
   background-color: var(--gray-soft);
   top: 50%;
   transform: translateY(-50%);
