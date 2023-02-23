@@ -5,7 +5,7 @@ import AccMonth from "@/components/calendar/AccMonth.vue";
 import LogTable from "@/components/calendar/LogTable.vue";
 import LoadingAnimation from "@/components/common/LoadingAnimation.vue";
 import { useMonthLogStore } from "@/stores/monthlog";
-import { onBeforeMount, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const monthLog = useMonthLogStore();
 const {
@@ -20,7 +20,7 @@ const {
   showIsLoading,
 } = monthLog;
 
-onBeforeMount(() => {
+onMounted(() => {
   apiLogsMonthData();
 });
 
@@ -107,8 +107,8 @@ watch(showIsLoading, (val) => {
 }
 
 .today {
-  color: var(--color-primary) !important;
-  border: 1px solid var(--color-primary);
+  color: var(--cal-today) !important;
+  border: 1px solid var(--cal-today);
 }
 /* .today::after {
   content: "";

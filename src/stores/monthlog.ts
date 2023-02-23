@@ -245,12 +245,17 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     }
     console.log("월 정보 호출");
     isLoading.value = true;
-    const { data: monthData }: LogsData = await getLogsmonth(
-      year.value,
-      month.value + 1
-    );
-    setLogs(monthData);
-    isLoading.value = false;
+    try {
+      const { data: monthData }: LogsData = await getLogsmonth(
+        year.value,
+        month.value + 1
+      );
+      setLogs(monthData);
+      isLoading.value = false;
+    } catch (error) {
+      console.log(error);
+      isLoading.value = false;
+    }
   };
 
   const apiLogsNowMonthData = async () => {
@@ -290,6 +295,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     calcLastDate();
     setDateTitle();
     apiLogsMonthData();
+    console.log(logsContainer.value);
   };
 
   // 다음 달 버튼 클릭
@@ -309,15 +315,16 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     calcLastDate();
     setDateTitle();
     apiLogsMonthData();
+    console.log(logsContainer.value);
   };
 
   // 일별 누적시간 색상 컬러셋
   const DATE_BG_COLOR = {
     0: "transparent", // 0
-    1: "rgba(115,91,242, .2)", // 0 - 3
-    2: "rgba(115,91,242, .4)", // 3 - 6
-    3: "rgba(115,91,242, .6)", // 6 - 9
-    4: "rgba(115,91,242, .8)", // 9 이상
+    1: "var(--cal-bg-1)", // 0 - 3
+    2: "var(--cal-bg-2)", // 3 - 6
+    3: "var(--cal-bg-3)", // 6 - 9
+    4: "var(--cal-bg-4)", // 9 이상
   };
 
   // 일별 누적시간 색상 계산

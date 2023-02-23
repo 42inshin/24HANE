@@ -56,6 +56,12 @@
   --header-bg: var(--white-soft);
   --menu-shadow: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.05));
   --color-vbutton: var(--gray-dark);
+
+  --cal-bg-1: rgba(115, 91, 242, 0.1);
+  --cal-bg-2: rgba(115, 91, 242, 0.35);
+  --cal-bg-3: rgba(115, 91, 242, 0.6);
+  --cal-bg-4: rgba(115, 91, 242, 0.85);
+  --cal-today: var(--color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -75,6 +81,12 @@
 
     --header-bg: var(--black);
     --color-vbutton: var(--gray);
+
+    --cal-bg-1: rgba(115, 91, 242, 0.1);
+    --cal-bg-2: rgba(115, 91, 242, 0.35);
+    --cal-bg-3: rgba(115, 91, 242, 0.6);
+    --cal-bg-4: rgba(115, 91, 242, 0.85);
+    --cal-today: #fff;
   }
 }
 

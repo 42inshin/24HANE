@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import FoldCard from "@/components/home/FoldCard.vue";
 import UserNumSection from "@/components/home/UserNumSection.vue";
 import BarChartCard from "@/components/home/BarChartCard.vue";
@@ -21,7 +21,7 @@ const {
   showNowMonthLogs,
 } = useMonthLogStore();
 
-onBeforeMount(() => {
+onMounted(() => {
   apiMainInfo();
   apiLogsNowMonthData();
 });

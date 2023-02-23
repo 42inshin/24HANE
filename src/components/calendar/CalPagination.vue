@@ -1,15 +1,34 @@
 <script setup lang="ts">
 import VIcon from "@/components/icons/IconChevron.vue";
 import { useMonthLogStore } from "@/stores/monthlog";
+import { ref, watch } from "vue";
 
 const monthLog = useMonthLogStore();
-const { showDateTitle, calcOptions, nextMonth, prevMonth, selectMonth } =
-  monthLog;
+const {
+  showDateTitle,
+  calcOptions,
+  nextMonth,
+  prevMonth,
+  selectMonth,
+  showIsLoading,
+} = monthLog;
+
+const isLoading = ref(showIsLoading());
+watch(showIsLoading, (val) => {
+  isLoading.value = val;
+});
+
+const clickPrevMonth = () => {
+  if (!isLoading.value) prevMonth();
+};
+const clickNextMonth = () => {
+  if (!isLoading.value) nextMonth();
+};
 </script>
 
 <template>
   <div class="pagination tapHighlight">
-    <button @click="prevMonth">
+    <button @click="clickPrevMonth">
       <VIcon :color="`var(--color-vbutton)`" />
     </button>
     <select
@@ -19,6 +38,7 @@ const { showDateTitle, calcOptions, nextMonth, prevMonth, selectMonth } =
       name="year-month"
     >
       <option
+        :disabled="isLoading"
         v-for="(date, i) in calcOptions()"
         :key="i"
         :value="date"
@@ -27,7 +47,7 @@ const { showDateTitle, calcOptions, nextMonth, prevMonth, selectMonth } =
         {{ date }}
       </option>
     </select>
-    <button @click="nextMonth">
+    <button @click="clickNextMonth">
       <VIcon :color="`var(--color-vbutton)`" />
     </button>
   </div>
