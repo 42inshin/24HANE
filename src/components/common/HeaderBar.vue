@@ -9,6 +9,8 @@ const { getUserInfo } = useHomeStore();
 
 const userInfo = ref(getUserInfo());
 const isNotification = ref(false);
+const isClickImg = ref(false);
+const isOnline = ref(false);
 
 watch(
   () => getUserInfo(),
@@ -23,13 +25,14 @@ watch(
     <div class="profile">
       <div class="profileImg">
         <img
-          v-if="!!userInfo.profileImage"
+          v-if="!!userInfo.profileImage && !isClickImg"
+          @click="isClickImg = true"
           :src="userInfo.profileImage"
           alt="프로필 이미지"
         />
-        <LogoIcon v-else />
+        <LogoIcon v-else @click="isClickImg = false" />
       </div>
-      <h2>{{ userInfo.login }} 님</h2>
+      <h2 :class="{ online: isOnline }">{{ userInfo.login }}</h2>
     </div>
     <RouterLink
       to="/notification"
@@ -83,6 +86,18 @@ watch(
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-heading);
+  position: relative;
+}
+
+.profile .online::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: -10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-secondary);
 }
 
 .notification {
