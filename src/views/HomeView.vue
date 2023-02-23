@@ -101,6 +101,7 @@ watch(
       <swiper-slide>
         <BarChartCard
           class="m-16 slide"
+          :isMonth="true"
           :periodsData="getMonthlyData"
         ></BarChartCard>
       </swiper-slide>
