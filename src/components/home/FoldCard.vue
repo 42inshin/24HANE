@@ -122,6 +122,7 @@ const checkColor = () => {
   justify-content: space-between;
   align-items: center;
   vertical-align: top;
+  user-select: none;
 }
 
 .textWrap.use {
