@@ -4,7 +4,9 @@ import { getMainInfo, getAccTimes } from "@/api/userAPI";
 import type { UserInfo, MainInfo } from "@/types/user";
 import type { UserAccTime, PeriodData } from "@/types/logs";
 
-export const homeStore = defineStore("home", () => {
+export const useHomeStore = defineStore("home", () => {
+  const isLoading = ref(false);
+
   const userInfo: UserInfo = ref({
     loginID: "",
     isAdmin: false,
@@ -57,6 +59,10 @@ export const homeStore = defineStore("home", () => {
 
   const weeklyGraph: PeriodData[] = ref(dumyData);
   const monthlyGraph: PeriodData[] = ref(dumyData);
+
+  const getIsLoading = () => {
+    return isLoading.value;
+  };
 
   const getUserInfo = () => {
     return userInfo.value;
@@ -121,16 +127,20 @@ export const homeStore = defineStore("home", () => {
 
   const apiAccTimes = async () => {
     try {
+      isLoading.value = true;
       const { data: accTimes }: UserAccTime = await getAccTimes();
       console.log(accTimes);
       accDate.value = calcSecToTime(accTimes.todayAccumationTime);
       accMonth.value = calcSecToTime(accTimes.monthAccumationTime);
+      isLoading.value = false;
     } catch (error) {
       console.log(error);
+      isLoading.value = false;
     }
   };
 
   return {
+    getIsLoading,
     getUserInfo,
     getAccDate,
     getAccMonth,

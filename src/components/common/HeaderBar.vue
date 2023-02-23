@@ -3,9 +3,9 @@ import { ref, watch } from "vue";
 import LogoIcon from "@/components/icons/IconLogo.vue";
 import NotificationIconFill from "@/components/icons/IconNotificationFill.vue";
 import NotificationIconLine from "@/components/icons/IconNotificationLine.vue";
-import { homeStore } from "@/stores/home";
+import { useHomeStore } from "@/stores/home";
 
-const { getUserInfo } = homeStore();
+const { getUserInfo } = useHomeStore();
 
 const userInfo = ref(getUserInfo());
 const isNotification = ref(false);

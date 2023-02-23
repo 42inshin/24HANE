@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import ChevronIcon from "@/components/icons/IconChevron.vue";
 import CircleProgress from "@/components/home/CircleProgress.vue";
+import LoadingAnimationVue from "@/components/common/LoadingAnimation.vue";
+import { useHomeStore } from "@/stores/home";
 
 const props = defineProps<{
   hour: number;
@@ -9,9 +11,17 @@ const props = defineProps<{
   isMonth?: boolean;
 }>();
 
+const homeStore = useHomeStore();
+const { getIsLoading } = homeStore;
+const isLoading = ref(getIsLoading());
+
 const isOpen = ref(false);
 const goalTime = ref(0);
 const colorSet = ref(props.isMonth);
+
+watch(getIsLoading, (val) => {
+  isLoading.value = val;
+});
 
 const culculatePercent = () => {
   if (goalTime.value === 0) return 0;
@@ -40,7 +50,8 @@ const checkColor = () => {
       <h2>
         <slot name="title"></slot>
       </h2>
-      <div>
+      <div v-if="isLoading" class="loading"><LoadingAnimationVue /></div>
+      <div v-else>
         <span class="timeNumber">
           {{ props.hour }}
         </span>
@@ -131,6 +142,13 @@ const checkColor = () => {
 .textWrap.goal.on {
   margin-top: 16px;
   opacity: 1;
+}
+
+.loading .wrap {
+  width: 100px;
+  height: 20px;
+  padding: 0;
+  background-color: transparent;
 }
 
 h2 {

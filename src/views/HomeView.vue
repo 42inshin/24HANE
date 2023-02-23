@@ -8,7 +8,7 @@ import { Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { homeStore } from "@/stores/home";
+import { useHomeStore } from "@/stores/home";
 
 const {
   apiMainInfo,
@@ -18,7 +18,7 @@ const {
   getWeeklyGraph,
   getMonthlyGraph,
   getNumberOfPeople,
-} = homeStore();
+} = useHomeStore();
 
 onBeforeMount(() => {
   apiMainInfo();
