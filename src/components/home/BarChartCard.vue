@@ -4,6 +4,7 @@ import { ref, computed } from "vue";
 
 const props = defineProps<{
   periodsData: PeriodData[];
+  isMonth?: boolean;
 }>();
 
 const periodsData = ref(props.periodsData);
@@ -33,7 +34,8 @@ const clickIndex = ref(0);
 
 <template>
   <div class="wrap">
-    <h3>최근 주간 그래프<span> (6주)</span></h3>
+    <h3 v-if="isMonth">최근 월간 그래프<span> (6개월)</span></h3>
+    <h3 v-else>최근 주간 그래프<span> (6주)</span></h3>
     <div class="detailView">
       <div class="title">{{ periodsData[clickIndex].periods }}</div>
       <div class="timeView">
