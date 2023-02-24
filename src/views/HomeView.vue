@@ -11,8 +11,13 @@ import "swiper/css/pagination";
 import { useHomeStore } from "@/stores/home";
 import { useMonthLogStore } from "@/stores/monthlog";
 
-const { apiMainInfo, getWeeklyGraph, getMonthlyGraph, getNumberOfPeople } =
-  useHomeStore();
+const {
+  apiMainInfo,
+  getWeeklyGraph,
+  getMonthlyGraph,
+  getNumberOfPeople,
+  getUserInfo,
+} = useHomeStore();
 
 const {
   apiLogsNowMonthData,
@@ -31,6 +36,8 @@ const monthAccTime = ref(getNowMonthAccTimeText());
 const getWeeklyData = ref(getWeeklyGraph());
 const getMonthlyData = ref(getMonthlyGraph());
 const numberOfPeople = ref(getNumberOfPeople());
+
+const isOnline = ref(getUserInfo().inoutState);
 
 watch(
   () => showNowMonthLogs(),
@@ -70,10 +77,18 @@ watch(
     numberOfPeople.value = getNumberOfPeople();
   }
 );
+
+watch(
+  () => getUserInfo(),
+  () => {
+    isOnline.value = getUserInfo().inoutState;
+  }
+);
 </script>
 
 <template>
-  <main>
+  <main :class="{ online: isOnline === 'IN' }">
+    <div class="bg" :class="{ online: isOnline === 'IN' }"></div>
     <FoldCard :hour="todayAccTime.hour" :min="todayAccTime.minute">
       <template #title>이용 시간</template>
     </FoldCard>
@@ -106,13 +121,32 @@ watch(
         ></BarChartCard>
       </swiper-slide>
     </swiper>
-    <UserNumSection :numberOfPeople="numberOfPeople" />
+    <UserNumSection
+      :isOnline="isOnline === 'IN'"
+      :numberOfPeople="numberOfPeople"
+    />
   </main>
 </template>
 
 <style scoped>
 main {
   padding: 80px 30px;
+}
+
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.bg.online {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+main.online {
+  background: url("@/images/home-bg.jpg") no-repeat center center fixed;
 }
 
 .m-16 {

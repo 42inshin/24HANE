@@ -7,6 +7,7 @@ const props = defineProps<{
     gaepo: number;
     seocho: number;
   };
+  isOnline: boolean;
 }>();
 
 const userNum = ref(props.numberOfPeople);
@@ -14,7 +15,7 @@ const userNum = ref(props.numberOfPeople);
 
 <template>
   <section class="userNumSection">
-    <h2>실시간 현황</h2>
+    <h2 :class="{ online: props.isOnline }">실시간 현황</h2>
     <div class="userNumCards">
       <UserNumCard class="m-8" :userNum="userNum.gaepo ?? 0">
         <template #title>개포</template>
@@ -37,6 +38,10 @@ const userNum = ref(props.numberOfPeople);
   line-height: 1.5rem;
   color: var(--color-heading);
   margin-bottom: 8px;
+}
+
+.userNumSection h2.online {
+  color: var(--white);
 }
 
 .userNumCards {

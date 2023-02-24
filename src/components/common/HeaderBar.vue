@@ -10,7 +10,6 @@ const { getUserInfo } = useHomeStore();
 const userInfo = ref(getUserInfo());
 const isNotification = ref(false);
 const isClickImg = ref(false);
-const isOnline = ref(false);
 
 watch(
   () => getUserInfo(),
@@ -21,7 +20,7 @@ watch(
 </script>
 
 <template>
-  <nav class="wrap">
+  <nav class="wrap" :class="{ online: userInfo.inoutState === 'IN' }">
     <div class="profile">
       <div class="profileImg">
         <img
@@ -32,7 +31,9 @@ watch(
         />
         <LogoIcon v-else @click="isClickImg = false" />
       </div>
-      <h2 :class="{ online: isOnline }">{{ userInfo.login }}</h2>
+      <h2 :class="{ online: userInfo.inoutState === 'IN' }">
+        {{ userInfo.login }}
+      </h2>
     </div>
     <RouterLink
       to="/notification"
@@ -58,6 +59,10 @@ watch(
   padding: 10px 16px 10px 30px;
   z-index: 9;
   background: var(--header-bg);
+}
+
+.wrap.online {
+  background: none;
 }
 
 .profile {
