@@ -151,9 +151,10 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 월 로그들의 컨테이너
   const logsContainer = ref(
     monthList.value.map((option) => {
+      const data: LogsData = { login: "", profileImage: "", inOutLogs: [] };
       return {
         date: option,
-        logs: [],
+        logs: data,
       };
     })
   );
@@ -217,7 +218,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
 
   // 오늘 날짜 로그 api 호출
   const apiTodayData = async () => {
-    const { data: logsData }: LogsData = await getLogsDate(
+    const { data: logsData } = await getLogsDate(
       today.value.getFullYear(),
       today.value.getMonth() + 1,
       today.value.getDate()
@@ -235,7 +236,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     if (
       logsContainer.value.find(
         (log) => log.date === `${showYear()}. ${showMonth() + 1}`
-      )?.logs.length !== 0
+      )?.logs.inOutLogs.length !== 0
     ) {
       if (showMonth() === today.value.getMonth()) {
         console.log("오늘 정보 호출");
@@ -246,7 +247,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     console.log("월 정보 호출");
     isLoading.value = true;
     try {
-      const { data: monthData }: LogsData = await getLogsmonth(
+      const { data: monthData } = await getLogsmonth(
         year.value,
         month.value + 1
       );
@@ -265,7 +266,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
         (log) =>
           log.date ===
           `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
-      )?.logs.length !== 0
+      )?.logs.inOutLogs.length !== 0
     ) {
       apiTodayData();
       console.log("오늘 데이터 호출");
@@ -273,7 +274,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
       return;
     }
     isLoading.value = true;
-    const { data: monthData }: LogsData = await getLogsmonth(
+    const { data: monthData } = await getLogsmonth(
       today.value.getFullYear(),
       today.value.getMonth() + 1
     );
@@ -340,8 +341,8 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 선택한 날짜의 로그 테이블
   const viewLogs = ref<Log[]>([]);
 
-  const setDisit: string = (num: number) => {
-    return num < 10 ? `0${num}` : num;
+  const setDisit = (num: number): string => {
+    return num < 10 ? `0${num}` : `${num}`;
   };
 
   const changeTimetext = (accTime: number) => {
@@ -353,10 +354,10 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   };
 
   // 선택한 일의 log 테이블 생성
-  const getDateLogs: Log[] = () => {
+  const getDateLogs = () => {
     const tempLogs: Log[] = [];
     const logs = showLogs();
-    if (logs.length === 0) return tempLogs;
+    if (!logs || logs?.inOutLogs.length === 0) return tempLogs;
     logs.inOutLogs.forEach((log) => {
       const inLogTime = new Date(log.inTimeStamp * 1000);
       const outLogTime = new Date(log.outTimeStamp * 1000);
@@ -392,7 +393,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const getDateAccTime = (date: number) => {
     let duration = 0;
     const logs = showLogs();
-    if (logs.length === 0) return duration;
+    if (!logs || logs.inOutLogs.length === 0) return duration;
     logs.inOutLogs.forEach((log) => {
       const logTime = new Date(log.inTimeStamp * 1000);
       const LogYear = logTime.getFullYear();
@@ -414,7 +415,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const getNowDateAccTime = () => {
     let duration = 0;
     const logs = showNowMonthLogs();
-    if (logs.length === 0) return duration;
+    if (!logs || logs.inOutLogs.length === 0) return duration;
     const todayYear = today.value.getFullYear();
     const todayMonth = today.value.getMonth();
     const todayDate = today.value.getDate();
@@ -458,7 +459,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const getMonthAccTime = () => {
     let duration = 0;
     const logs = showLogs();
-    if (logs.length === 0) return duration;
+    if (!logs || logs.inOutLogs.length === 0) return duration;
     logs.inOutLogs.forEach((log) => {
       const inTime = new Date(log.inTimeStamp * 1000);
       const LogYear = inTime.getFullYear();
@@ -478,7 +479,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const getNowMonthAccTime = () => {
     let duration = 0;
     const logs = showNowMonthLogs();
-    if (logs.length === 0) return duration;
+    if (!logs || logs.inOutLogs.length === 0) return duration;
     const todayYear = today.value.getFullYear();
     const todayMonth = today.value.getMonth();
     logs.inOutLogs.forEach((log) => {
