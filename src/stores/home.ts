@@ -4,11 +4,13 @@ import { getMainInfo, getAccTimes } from "@/api/userAPI";
 import type { UserInfo, MainInfo } from "@/types/user";
 import type { UserAccTime, PeriodData } from "@/types/logs";
 
+import { saveStorage, getStorage, clearStorage } from "@/utils/localStorage";
+
 export const useHomeStore = defineStore("home", () => {
   const isLoading = ref(false);
 
-  const userInfo: UserInfo = ref({
-    loginID: "",
+  const userInfo = ref({
+    login: "",
     isAdmin: false,
     profileImage: "",
     inoutState: "OUT",
@@ -24,6 +26,9 @@ export const useHomeStore = defineStore("home", () => {
     hour: 0,
     minute: 0,
   });
+
+  const goalDateHour = ref(getStorage("goalDateHour") || 0);
+  const goalMonthHour = ref(getStorage("goalMonthHour") || 0);
 
   const numberOfPeople = ref({
     gaepo: 0,
@@ -57,8 +62,8 @@ export const useHomeStore = defineStore("home", () => {
     },
   ];
 
-  const weeklyGraph: PeriodData[] = ref(dumyData);
-  const monthlyGraph: PeriodData[] = ref(dumyData);
+  const weeklyGraph = ref<PeriodData[]>(dumyData);
+  const monthlyGraph = ref<PeriodData[]>(dumyData);
 
   const getIsLoading = () => {
     return isLoading.value;
@@ -74,6 +79,24 @@ export const useHomeStore = defineStore("home", () => {
 
   const getAccMonth = () => {
     return accMonth.value;
+  };
+
+  const getGoalDateHour = () => {
+    return goalDateHour.value;
+  };
+
+  const getGoalMonthHour = () => {
+    return goalMonthHour.value;
+  };
+
+  const setGoalDateHour = (hour: number) => {
+    goalDateHour.value = hour;
+    saveStorage("goalDateHour", hour);
+  };
+
+  const setGoalMonthHour = (hour: number) => {
+    goalMonthHour.value = hour;
+    saveStorage("goalMonthHour", hour);
   };
 
   const getNumberOfPeople = () => {
@@ -101,7 +124,7 @@ export const useHomeStore = defineStore("home", () => {
 
   const apiMainInfo = async () => {
     try {
-      const { data: mainInfo }: MainInfo = await getMainInfo();
+      const { data: mainInfo } = await getMainInfo();
       console.log(mainInfo);
       userInfo.value = {
         login: mainInfo.login,
@@ -128,7 +151,7 @@ export const useHomeStore = defineStore("home", () => {
   const apiAccTimes = async () => {
     try {
       isLoading.value = true;
-      const { data: accTimes }: UserAccTime = await getAccTimes();
+      const { data: accTimes } = await getAccTimes();
       console.log(accTimes);
       accDate.value = calcSecToTime(accTimes.todayAccumationTime);
       accMonth.value = calcSecToTime(accTimes.monthAccumationTime);
@@ -144,6 +167,10 @@ export const useHomeStore = defineStore("home", () => {
     getUserInfo,
     getAccDate,
     getAccMonth,
+    getGoalDateHour,
+    getGoalMonthHour,
+    setGoalDateHour,
+    setGoalMonthHour,
     getNumberOfPeople,
     getWeeklyGraph,
     getMonthlyGraph,

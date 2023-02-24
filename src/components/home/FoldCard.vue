@@ -4,6 +4,7 @@ import ChevronIcon from "@/components/icons/IconChevron.vue";
 import CircleProgress from "@/components/home/CircleProgress.vue";
 import LoadingAnimationVue from "@/components/common/LoadingAnimation.vue";
 import { useMonthLogStore } from "@/stores/monthlog";
+import { useHomeStore } from "@/stores/home";
 
 const props = defineProps<{
   hour: number;
@@ -11,16 +12,35 @@ const props = defineProps<{
   isMonth?: boolean;
 }>();
 
+const { getGoalDateHour, getGoalMonthHour, setGoalDateHour, setGoalMonthHour } =
+  useHomeStore();
+
 const monthStore = useMonthLogStore();
 const { showIsLoading } = monthStore;
 const isLoading = ref(showIsLoading());
 
 const isOpen = ref(false);
-const goalTime = ref(0);
+const goalTimeSet = () => {
+  if (props.isMonth) {
+    return Number(getGoalMonthHour());
+  } else {
+    return Number(getGoalDateHour());
+  }
+};
+
+const goalTime = ref(goalTimeSet());
 const colorSet = ref(props.isMonth);
 
 watch(showIsLoading, (val) => {
   isLoading.value = val;
+});
+
+watch(goalTime, (val) => {
+  if (props.isMonth) {
+    setGoalMonthHour(Number(val));
+  } else {
+    setGoalDateHour(Number(val));
+  }
 });
 
 const culculatePercent = () => {
