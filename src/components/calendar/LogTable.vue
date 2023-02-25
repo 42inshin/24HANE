@@ -6,7 +6,6 @@ const {
   showDataLogs,
   showSelectedDate,
   showSelectedDateText,
-  showMonth,
   showLogs,
   showIsLoading,
 } = useMonthLogStore();
@@ -27,17 +26,17 @@ watch(showIsLoading, (val) => {
 });
 
 const calcHeight = () => {
-  const days = document.querySelector(".days");
+  const days = document.getElementById("days");
   const daysHeight = days?.clientHeight;
-  const logs = document.querySelector(".logs");
-  if (daysHeight && daysHeight > 190) {
+  const logs = document.getElementById("logs");
+  if (!!logs && !!daysHeight && daysHeight > 190) {
     logs?.classList.add("smaller");
   } else {
     logs?.classList.remove("smaller");
   }
 };
 
-watch(showMonth, () => {
+watch(showDataLogs, () => {
   calcHeight();
 });
 </script>
@@ -57,7 +56,7 @@ watch(showMonth, () => {
       <ul class="logs" v-if="isLoading">
         <li class="log logEmpty">기록이 없습니다.</li>
       </ul>
-      <ul class="logs" v-else>
+      <ul v-show="!isLoading" id="logs" class="logs">
         <li v-for="(log, i) in logs" :key="i" class="log">
           <div class="inLogTime">{{ log.inLogTime }}</div>
           <div class="outLogTime">{{ log.outLogTime }}</div>

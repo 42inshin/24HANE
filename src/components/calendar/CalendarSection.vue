@@ -52,7 +52,7 @@ watch(showIsLoading, (val) => {
       <div v-if="isLoading" class="loading">
         <LoadingAnimation />
       </div>
-      <div v-else class="days">
+      <div v-else id="days" class="days">
         <div v-for="i in day" :key="i" class="noday"></div>
         <div
           v-for="date in lastDate"
