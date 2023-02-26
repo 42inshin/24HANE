@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getCookie, removeCookie } from "./cookie/cookies";
 import { STATUS_401_UNAUTHORIZED } from "@/constants/statusCode";
+import { clearStorage } from "@/utils/localStorage";
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
@@ -29,6 +30,8 @@ instance.interceptors.response.use(
     // if (error.response?.status === STATUS_401_UNAUTHORIZED) {
     localStorage.removeItem("isLogin");
     removeCookie();
+    clearStorage("isLogin");
+    clearStorage("logsContainer");
     window.location.href = "/";
     if (!isAlert) {
       alert("API 실패: 로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");

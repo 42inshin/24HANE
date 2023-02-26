@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import { getLogsDate, getLogsmonth } from "@/api/logsAPI";
 import type { LogsData, Log } from "@/types/logs";
+import { getStorage, saveStorage } from "@/utils/localStorage";
 
 /*
   localStorage에 로그 저장 방법
@@ -148,16 +149,30 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     return monthList.value;
   };
 
-  // 월 로그들의 컨테이너
-  const logsContainer = ref(
-    monthList.value.map((option) => {
+  interface logsContainer {
+    date: string;
+    updatedAt: string;
+    logs: LogsData;
+  }
+
+  // 월 로그 컨테이너 세팅
+  const setLogsContainer = () => {
+    if (getStorage("logsContainer")) {
+      const data: logsContainer[] = JSON.parse(getStorage("logsContainer"));
+      return data;
+    }
+    return monthList.value.map((option) => {
       const data: LogsData = { login: "", profileImage: "", inOutLogs: [] };
       return {
         date: option,
+        updatedAt: "",
         logs: data,
       };
-    })
-  );
+    });
+  };
+
+  // 월 로그들의 컨테이너
+  const logsContainer = ref(setLogsContainer());
 
   // 보고 있는 월 로그들 가져오기
   const showLogs = () => {
@@ -178,9 +193,11 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const setLogs = (data: LogsData) => {
     logsContainer.value.map((log) => {
       if (log.date === `${showYear()}. ${showMonth() + 1}`) {
+        log.updatedAt = new Date().toISOString();
         log.logs = data;
       }
     });
+    saveStorage("logsContainer", logsContainer.value);
   };
 
   // 금 월의 오늘 로그 삭제하기
@@ -228,21 +245,72 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     console.log(logsData);
   };
 
-  // 월 로그 api 호출
-  // 로그가 없으면 apiLogsMonthData 호출
-  // 로그가 있으면 로그 컨테이너에서 가져오기
-  // 로그가 있으면서 오늘 날짜면 apiTodayData 호출
-  const apiLogsMonthData = async () => {
+  const checkNowMonth = () => {
+    if (showMonth() === today.value.getMonth()) {
+      return true;
+    }
+    return false;
+  };
+
+  const checkHasLogs = () => {
     if (
       logsContainer.value.find(
         (log) => log.date === `${showYear()}. ${showMonth() + 1}`
       )?.logs.inOutLogs.length !== 0
     ) {
-      if (showMonth() === today.value.getMonth()) {
-        console.log("오늘 정보 호출");
-        apiTodayData();
+      return true;
+    }
+    return false;
+  };
+
+  // 지난 달이고 업데이트 날짜가 이번 달 이상이면 true 데이터 호출 안함.
+  const checkPrevMonthUpdateAt = () => {
+    const updatedAt = logsContainer.value.find(
+      (log) => log.date === `${showYear()}. ${showMonth() + 1}`
+    )?.updatedAt;
+    if (updatedAt) {
+      const date = new Date(updatedAt);
+      if (date.getFullYear() > showYear() || date.getMonth() > showMonth()) {
+        return true;
       }
-      return;
+    }
+    return false;
+  };
+
+  // 이번 달이고 오늘 날짜면 true -> apiTodayData 호출
+  const checkNowMonthUpdateAt = () => {
+    const updatedAt = logsContainer.value.find(
+      (log) => log.date === `${showYear()}. ${showMonth() + 1}`
+    )?.updatedAt;
+    if (updatedAt) {
+      const date = new Date(updatedAt);
+      if (
+        date.getMonth() === today.value.getMonth() &&
+        date.getDate() === today.value.getDate()
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // 달 로그 api 호출
+
+  // 보고있는 월 로그 api 호출
+  // 로그가 없으면 월 로그api 호출
+  // 로그가 있으면 로그 컨테이너에서 가져오기
+  // 로그가 있으면서 오늘 날짜면 apiTodayData 호출
+  const apiLogsMonthData = async () => {
+    if (checkHasLogs()) {
+      if (checkNowMonth()) {
+        if (checkNowMonthUpdateAt()) {
+          console.log("오늘 정보 호출");
+          apiTodayData();
+          return;
+        }
+      } else {
+        if (checkPrevMonthUpdateAt()) return;
+      }
     }
     console.log("월 정보 호출");
     isLoading.value = true;
@@ -259,15 +327,40 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     }
   };
 
-  const apiLogsNowMonthData = async () => {
-    isLoading.value = true;
+  const checkTodayLogs = () => {
     if (
       logsContainer.value.find(
         (log) =>
           log.date ===
           `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
       )?.logs.inOutLogs.length !== 0
-    ) {
+    )
+      return true;
+    return false;
+  };
+
+  const checkTodayUpdateAt = () => {
+    const updatedAt = logsContainer.value.find(
+      (log) =>
+        log.date ===
+        `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
+    )?.updatedAt;
+    if (updatedAt) {
+      const date = new Date(updatedAt);
+      if (
+        date.getMonth() === today.value.getMonth() &&
+        date.getDate() === today.value.getDate()
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // 이번 달 로그 api 호출
+  const apiLogsNowMonthData = async () => {
+    isLoading.value = true;
+    if (checkTodayLogs() && checkTodayUpdateAt()) {
       apiTodayData();
       console.log("오늘 데이터 호출");
       isLoading.value = false;
