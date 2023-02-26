@@ -9,7 +9,7 @@ export const getStorage = function (key: string, item?: string) {
     const data = JSON.parse(localStorage.getItem(key) as string);
     return data[item];
   } else if (localStorage.getItem(key)) {
-    return localStorage.getItem(key);
+    return JSON.parse(localStorage.getItem(key) as string);
   }
 };
 

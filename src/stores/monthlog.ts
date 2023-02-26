@@ -21,16 +21,39 @@ import { getStorage, saveStorage } from "@/utils/localStorage";
 export const useMonthLogStore = defineStore("MonthLog", () => {
   // 오늘 날짜
   const today = ref(new Date());
+
+  const getStorageYear = () => {
+    if (getStorage("showDate")) {
+      return getStorage("showDate", "year");
+    }
+    return today.value.getFullYear();
+  };
+
   // 2023 현재 보이는 년도
-  const year = ref(today.value.getFullYear());
+  const year = ref(getStorageYear());
+
+  const getStorageMonth = () => {
+    if (getStorage("showDate")) {
+      return getStorage("showDate", "month");
+    }
+    return today.value.getMonth();
+  };
+
   // 0 ~ 11 현재 보이는 달
-  const month = ref(today.value.getMonth());
+  const month = ref(getStorageMonth());
   // 현재 월 1일의 요일
   const day = ref(new Date(year.value, month.value).getDay());
   // 현재 월의 총 일수
   const lastDate = ref(new Date(year.value, month.value + 1, 0).getDate());
+
+  const getStorageDate = () => {
+    if (getStorage("showDate")) {
+      return getStorage("showDate", "date");
+    }
+    return today.value.getDate();
+  };
   // 선택한 일
-  const selectDate = ref(today.value.getDate());
+  const selectDate = ref(getStorageDate());
 
   // 로딩 여부
   const isLoading = ref(false);
@@ -60,8 +83,11 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   const showSelectedDate = () => {
     return selectDate.value;
   };
+
+  // 선택한 일이 변경되면, 로컬스토리지에 저장
   const setSelectedDate = (date: number) => {
     selectDate.value = date;
+    saveStorageSelectedDate();
   };
 
   // 요일 계산
@@ -97,11 +123,21 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     dateTitle.value = `${showYear()}. ${showMonth() + 1}`;
   };
 
+  // localStorage에 선택한 날 저장
+  const saveStorageSelectedDate = () => {
+    const showDate = {
+      year: showYear(),
+      month: showMonth(),
+      date: showSelectedDate(),
+    };
+    saveStorage("showDate", showDate);
+  };
+
   // 오늘 날짜로 초기화
   const resetSelectedDate = () => {
-    selectDate.value = today.value.getDate();
     year.value = today.value.getFullYear();
     month.value = today.value.getMonth();
+    setSelectedDate(today.value.getDate());
     day.value = new Date(year.value, month.value).getDay();
     lastDate.value = new Date(year.value, month.value + 1, 0).getDate();
     setDateTitle();
@@ -158,7 +194,7 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
   // 월 로그 컨테이너 세팅
   const setLogsContainer = () => {
     if (getStorage("logsContainer")) {
-      const data: logsContainer[] = JSON.parse(getStorage("logsContainer"));
+      const data: logsContainer[] = getStorage("logsContainer");
       return data;
     }
     return monthList.value.map((option) => {
