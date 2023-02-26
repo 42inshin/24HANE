@@ -1,10 +1,8 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { getMainInfo, getAccTimes } from "@/api/userAPI";
-import type { UserInfo, MainInfo } from "@/types/user";
-import type { UserAccTime, PeriodData } from "@/types/logs";
-
-import { saveStorage, getStorage, clearStorage } from "@/utils/localStorage";
+import type { PeriodData } from "@/types/logs";
+import { saveStorage, getStorage } from "@/utils/localStorage";
 
 export const useHomeStore = defineStore("home", () => {
   const isLoading = ref(false);
