@@ -71,50 +71,52 @@ const clickApply = () => {
 <template>
   <HeaderBarSub title="카드 재발급 신청" :backButton="true" :path="'more'" />
   <main>
-    <h3>재발급 신청 방법</h3>
-    <DefaultButton title="자세히 보기" path="https://naver.com" />
-    <h3>재발급 신청 현황</h3>
-    <div class="card">
-      <ul>
-        <li>
-          <div
-            class="progress"
-            :class="{ on: progressIndex === CardOrder.APPLY }"
-          >
-            {{ PROGRESS[0].name }}
-          </div>
-          <div class="text">
-            <div class="title">{{ PROGRESS[0].title }}</div>
-            <div class="content">{{ PROGRESS[0].content }}</div>
-          </div>
-        </li>
-        <VIcon class="vIcon" />
-        <li>
-          <div
-            class="progress"
-            :class="{ on: progressIndex === CardOrder.PROGRESS }"
-          >
-            {{ PROGRESS[1].name }}
-          </div>
-          <div class="text">
-            <div class="title">{{ PROGRESS[1].title }}</div>
-            <div class="content">{{ PROGRESS[1].content }}</div>
-          </div>
-        </li>
-        <VIcon class="vIcon" />
-        <li>
-          <div
-            class="progress"
-            :class="{ on: progressIndex === CardOrder.COMPLETE }"
-          >
-            {{ PROGRESS[2].name }}
-          </div>
-          <div class="text">
-            <div class="title">{{ PROGRESS[2].title }}</div>
-            <div class="content">{{ PROGRESS[2].content }}</div>
-          </div>
-        </li>
-      </ul>
+    <div>
+      <h3>재발급 신청 방법</h3>
+      <DefaultButton title="자세히 보기" path="https://naver.com" />
+      <h3>재발급 신청 현황</h3>
+      <div class="card">
+        <ul>
+          <li>
+            <div
+              class="progress"
+              :class="{ on: progressIndex === CardOrder.APPLY }"
+            >
+              {{ PROGRESS[0].name }}
+            </div>
+            <div class="text">
+              <div class="title">{{ PROGRESS[0].title }}</div>
+              <div class="content">{{ PROGRESS[0].content }}</div>
+            </div>
+          </li>
+          <VIcon class="vIcon" />
+          <li>
+            <div
+              class="progress"
+              :class="{ on: progressIndex === CardOrder.PROGRESS }"
+            >
+              {{ PROGRESS[1].name }}
+            </div>
+            <div class="text">
+              <div class="title">{{ PROGRESS[1].title }}</div>
+              <div class="content">{{ PROGRESS[1].content }}</div>
+            </div>
+          </li>
+          <VIcon class="vIcon" />
+          <li>
+            <div
+              class="progress"
+              :class="{ on: progressIndex === CardOrder.COMPLETE }"
+            >
+              {{ PROGRESS[2].name }}
+            </div>
+            <div class="text">
+              <div class="title">{{ PROGRESS[2].title }}</div>
+              <div class="content">{{ PROGRESS[2].content }}</div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
     <DefaultButton
       class="applyButton"
@@ -129,13 +131,21 @@ const clickApply = () => {
 
 <style scoped>
 main {
-  padding: 70px 30px;
+  padding: 70px 30px 80px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 h3 {
   font-size: 1.125rem;
   font-weight: 700;
   margin: 20px 0 10px;
+}
+
+h3:first-child {
+  margin-top: 0;
 }
 
 .card {
