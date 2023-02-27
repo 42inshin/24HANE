@@ -96,7 +96,7 @@ const checkColor = () => {
         </select>
         <select v-else v-model="goalTime" class="timeNumber select">
           <option :value="0" selected>0</option>
-          <option v-for="index in 16" :key="index" :value="index * 20">
+          <option v-for="index in 21" :key="index" :value="index * 20">
             {{ index * 20 }}
           </option>
         </select>
