@@ -9,6 +9,8 @@ body {
   padding: 0;
   font-weight: normal;
   height: 100%;
+  margin: 0 auto;
+  max-width: 425px;
 }
 
 /* swiper */

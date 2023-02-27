@@ -46,6 +46,14 @@ const { resetSelectedDate } = monthLog;
   padding: 0 30px;
 }
 
+@media (min-width: 425px) {
+  .wrap {
+    max-width: 425px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 nav {
   display: flex;
   justify-content: space-around;

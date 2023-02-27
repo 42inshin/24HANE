@@ -29,6 +29,14 @@ const props = defineProps<{
   background-color: var(--color-background-soft);
 }
 
+@media (min-width: 425px) {
+  .wrap {
+    max-width: 425px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .wrap.backButton h2 {
   text-align: center;
 }

@@ -61,6 +61,14 @@ watch(
   background: var(--header-bg);
 }
 
+@media (min-width: 425px) {
+  .wrap {
+    max-width: 425px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .wrap.online {
   background: none;
 }
@@ -84,6 +92,7 @@ watch(
 .profileImg img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .profile h2 {
