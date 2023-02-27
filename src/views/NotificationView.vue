@@ -2,8 +2,14 @@
 import HeaderBarSub from "@/components/common/HeaderBarSub.vue";
 import AlarmItem from "@/components/alarm/AlarmItem.vue";
 
-// const messages = [];
-const messages = [
+interface Message {
+  date: string;
+  title: string;
+  content: string;
+}
+
+const messages: Message[] = [];
+/* const messages = [
   {
     date: "2.13",
     title: "🏃‍♂️ 오늘도 힘차게 클러스터를 가볼까요?",
@@ -26,7 +32,7 @@ const messages = [
     content:
       "24HANE 서비스가 새롭게 개편되었습니다.  어떻게 바뀌었는지 살펴 볼까요?",
   },
-];
+]; */
 </script>
 
 <template>
