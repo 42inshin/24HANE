@@ -15,7 +15,7 @@ export const getStorage = function (key: string, item?: string) {
 
 // Clear a single item or the whole local storage
 export const clearStorage = function (key = "false") {
-  if (key) {
+  if (key !== "false") {
     localStorage.removeItem(key);
   } else {
     localStorage.clear();

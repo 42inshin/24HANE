@@ -30,8 +30,7 @@ instance.interceptors.response.use(
     // if (error.response?.status === STATUS_401_UNAUTHORIZED) {
     localStorage.removeItem("isLogin");
     removeCookie();
-    clearStorage("isLogin");
-    clearStorage("logsContainer");
+    clearStorage();
     window.location.href = "/";
     if (!isAlert) {
       alert("API 실패: 로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");

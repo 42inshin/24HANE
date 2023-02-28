@@ -5,9 +5,8 @@ import { clearStorage } from "@/utils/localStorage";
 
 const clickLogout = () => {
   removeCookie();
-  clearStorage("isLogin");
-  clearStorage("logsContainer");
   router.push("/");
+  clearStorage();
 };
 </script>
 
