@@ -236,6 +236,20 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
     saveStorage("logsContainer", logsContainer.value);
   };
 
+  // 이번 달 월 로그 세팅하기
+  const setNowMonthLogs = (data: LogsData) => {
+    logsContainer.value.map((log) => {
+      if (
+        log.date ===
+        `${today.value.getFullYear()}. ${today.value.getMonth() + 1}`
+      ) {
+        log.updatedAt = new Date().toISOString();
+        log.logs = data;
+      }
+    });
+    saveStorage("logsContainer", logsContainer.value);
+  };
+
   // 금 월의 오늘 로그 삭제하기
   const deleteTodayLogs = () => {
     logsContainer.value.map((monthlog) => {
@@ -407,9 +421,10 @@ export const useMonthLogStore = defineStore("MonthLog", () => {
       today.value.getFullYear(),
       today.value.getMonth() + 1
     );
-    setLogs(monthData);
+    setNowMonthLogs(monthData);
     isLoading.value = false;
     console.log("이번달 데이터 호출");
+    console.log(monthData);
   };
 
   // 이전 달 버튼 클릭
