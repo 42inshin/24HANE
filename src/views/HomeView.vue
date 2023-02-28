@@ -146,7 +146,7 @@ main {
 }
 
 main.online {
-  background: url("@/images/home-bg.jpg") no-repeat center center fixed;
+  background: url("/home-bg.jpg") no-repeat center center fixed;
 }
 
 .m-16 {
