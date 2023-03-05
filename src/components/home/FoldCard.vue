@@ -90,24 +90,30 @@ const checkColor = () => {
       <div>
         <select v-if="!isMonth" v-model="goalTime" class="timeNumber select">
           <option :value="0" selected>0</option>
-          <option v-for="index in 24" :key="index" :value="index">
+          <option
+            v-for="index in 24"
+            :key="index"
+            :value="index"
+            :selected="index === 8"
+          >
             {{ index }}
           </option>
         </select>
         <select v-else v-model="goalTime" class="timeNumber select">
           <option :value="0" selected>0</option>
-          <option v-for="index in 21" :key="index" :value="index * 20">
+          <option
+            v-for="index in 21"
+            :key="index"
+            :value="index * 20"
+            :selected="index === 80"
+          >
             {{ index * 20 }}
           </option>
         </select>
         <span class="timeUnit">시간</span>
       </div>
     </div>
-    <CircleProgress
-      :isOpen="isOpen"
-      :percent="culculatePercent()"
-      :goalTime="goalTime"
-    />
+    <CircleProgress :isOpen="isOpen" :percent="culculatePercent()" />
   </div>
 </template>
 
@@ -122,6 +128,7 @@ const checkColor = () => {
   transition: all 0.3s ease-in-out;
   overflow: hidden;
   padding: 26px 20px;
+  user-select: none;
 }
 
 .wrap.on {
@@ -187,10 +194,11 @@ h2 {
 }
 
 .goal .timeNumber {
-  width: 50px;
+  width: 60px;
   height: 30px;
   border: none;
   text-align: right;
+  margin-right: 2px;
   font-size: 1.25rem;
   font-weight: 700;
   font-family: Inter, sans-serif;
@@ -198,6 +206,7 @@ h2 {
 }
 
 .select {
+  direction: rtl;
   cursor: pointer;
   -o-appearance: none;
   -webkit-appearance: none;

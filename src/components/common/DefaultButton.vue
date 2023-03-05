@@ -4,6 +4,7 @@ const props = defineProps<{
   path?: string;
   background?: string;
   color?: string;
+  marginTop?: string;
   isDisable?: boolean;
 }>();
 </script>
@@ -12,7 +13,7 @@ const props = defineProps<{
   <button
     :disabled="isDisable"
     class="button"
-    :style="{ background: background, color: color }"
+    :style="{ background: background, color: color, marginTop: marginTop }"
   >
     <a v-if="path" :href="props.path" target="_blank">{{ props.title }}</a>
     <span v-else>{{ props.title }}</span>

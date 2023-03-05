@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import UserNumCard from "@/components/home/UserNumCard.vue";
-import { ref } from "vue";
 
 const props = defineProps<{
   numberOfPeople: {
@@ -9,18 +8,16 @@ const props = defineProps<{
   };
   isOnline: boolean;
 }>();
-
-const userNum = ref(props.numberOfPeople);
 </script>
 
 <template>
   <section class="userNumSection">
     <h2 :class="{ online: props.isOnline }">실시간 현황</h2>
     <div class="userNumCards">
-      <UserNumCard class="m-8" :userNum="userNum.gaepo ?? 0">
+      <UserNumCard class="m-8" :userNum="props.numberOfPeople.gaepo ?? 0">
         <template #title>개포</template>
       </UserNumCard>
-      <UserNumCard class="m-8" :userNum="userNum.seocho ?? 0">
+      <UserNumCard class="m-8" :userNum="props.numberOfPeople.seocho ?? 0">
         <template #title>서초</template>
       </UserNumCard>
     </div>
@@ -30,6 +27,7 @@ const userNum = ref(props.numberOfPeople);
 <style scoped>
 .userNumSection {
   margin-top: 16px;
+  user-select: none;
 }
 
 .userNumSection h2 {

@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import HeaderBarSub from "@/components/common/HeaderBarSub.vue";
 import DefaultButton from "@/components/common/DefaultButton.vue";
 import VIcon from "@/components/icons/IconChevron.vue";
+import DefaultModal from "@/components/common/DefaultModal.vue";
+import {
+  getReissue,
+  setReissueRequest,
+  setReissueFinish,
+} from "@/api/reissueAPI";
+import LoadingAnimation from "@/components/common/LoadingAnimation.vue";
 
-// 0: 안함
+// 0: 없음
 // 1: 신청
 // 2: 제작
 // 3: 완료
@@ -15,6 +22,7 @@ enum CardOrder {
   COMPLETE = 3,
 }
 
+// api 받아와서 적용해야하는 부분
 const progressIndex = ref(0);
 
 const PROGRESS = [
@@ -58,13 +66,87 @@ const ApplyCardButton = [
     title: "데스크 카드수령 완료",
     background: "var(--color-primary)",
     color: "var(--white)",
-    isDisable: true,
+    isDisable: false,
   },
 ];
 
+const isLoading = ref(false);
+
+const getProgress = async () => {
+  isLoading.value = true;
+  const { data } = await getReissue();
+  if (data.state == "none" || data.state == "done") {
+    progressIndex.value = CardOrder.NONE;
+  } else if (data.state === "apply") {
+    progressIndex.value = CardOrder.APPLY;
+  } else if (data.state === "in_progress") {
+    progressIndex.value = CardOrder.PROGRESS;
+  } else if (data.state === "pick_up_requested") {
+    progressIndex.value = CardOrder.COMPLETE;
+  }
+  isLoading.value = false;
+};
+
+onMounted(() => {
+  getProgress();
+});
+
+const isApplyBtnClick = ref(false);
+
 const clickApply = () => {
-  console.log("카드 재발급 신청 버튼 클릭");
-  progressIndex.value = CardOrder.APPLY;
+  isApplyBtnClick.value = true;
+};
+
+const isClick = ref(false);
+
+const confirmApply = async () => {
+  if (isClick.value) return;
+  isClick.value = true;
+  try {
+    const response = await setReissueRequest();
+    if (response.status === 200 || response.status === 201) {
+      progressIndex.value = CardOrder.APPLY;
+      isApplyBtnClick.value = false;
+      isClick.value = false;
+    }
+  } catch (error) {
+    alert("카드 신청에 실패했습니다.");
+    isApplyBtnClick.value = false;
+    isClick.value = false;
+  }
+};
+
+const confirmReceiptCard = async () => {
+  if (isClick.value) return;
+  isClick.value = true;
+  try {
+    const response = await setReissueFinish();
+    if (response.status === 200 || response.status === 201) {
+      progressIndex.value = CardOrder.NONE;
+      isApplyBtnClick.value = false;
+      isClick.value = false;
+    }
+  } catch (error) {
+    alert("카드 수령 확인에 실패했습니다.");
+    isApplyBtnClick.value = false;
+    isClick.value = false;
+  }
+};
+
+const selectButtonBackground = () => {
+  if (isLoading.value) {
+    return ApplyCardButton[1].background;
+  } else {
+    return ApplyCardButton[progressIndex.value].background;
+  }
+};
+
+const selectButtonColor = () => {
+  if (isLoading.value) {
+    return ApplyCardButton[1].color;
+  } else {
+    return ApplyCardButton[progressIndex.value].color;
+  }
 };
 </script>
 
@@ -76,7 +158,8 @@ const clickApply = () => {
       <DefaultButton title="자세히 보기" path="https://naver.com" />
       <h3>재발급 신청 현황</h3>
       <div class="card">
-        <ul>
+        <LoadingAnimation v-if="isLoading" />
+        <ul v-else>
           <li>
             <div
               class="progress"
@@ -89,7 +172,7 @@ const clickApply = () => {
               <div class="content">{{ PROGRESS[0].content }}</div>
             </div>
           </li>
-          <VIcon class="vIcon" />
+          <VIcon class="vIcon" color="var(--gray-soft)" />
           <li>
             <div
               class="progress"
@@ -102,7 +185,7 @@ const clickApply = () => {
               <div class="content">{{ PROGRESS[1].content }}</div>
             </div>
           </li>
-          <VIcon class="vIcon" />
+          <VIcon class="vIcon" color="var(--gray-soft)" />
           <li>
             <div
               class="progress"
@@ -122,11 +205,63 @@ const clickApply = () => {
       class="applyButton"
       @click="clickApply"
       :title="ApplyCardButton[progressIndex].title"
-      :background="ApplyCardButton[progressIndex].background"
-      :color="ApplyCardButton[progressIndex].color"
+      :background="selectButtonBackground()"
+      :color="selectButtonColor()"
       :isDisable="ApplyCardButton[progressIndex].isDisable"
     />
   </main>
+  <DefaultModal v-if="isApplyBtnClick && progressIndex === CardOrder.NONE">
+    <template #title
+      >카드 재발급을<br />
+      신청하시겠습니까?</template
+    >
+    <template #content>신청 후 취소가 불가능합니다.</template>
+    <template #button>
+      <DefaultButton
+        v-if="!isClick"
+        title="네, 신청하겠습니다"
+        background="var(--color-primary)"
+        color="var(--white)"
+        @click="confirmApply"
+      />
+      <div v-else class="fakeButton">
+        <LoadingAnimation />
+      </div>
+      <DefaultButton
+        title="취소"
+        background="var(--divider)"
+        color="var(--black)"
+        marginTop="10px"
+        @click="isApplyBtnClick = false"
+      />
+    </template>
+  </DefaultModal>
+  <DefaultModal v-if="isApplyBtnClick && progressIndex === CardOrder.COMPLETE">
+    <template #title
+      >저는 카드를 받았음을<br />
+      확인했습니다.</template
+    >
+    <template #content>실물 카드를 받은 후 눌러 주세요.</template>
+    <template #button>
+      <DefaultButton
+        v-if="!isClick"
+        title="네, 확인했습니다"
+        background="var(--color-primary)"
+        color="var(--white)"
+        @click="confirmReceiptCard"
+      />
+      <div v-else class="fakeButton">
+        <LoadingAnimation />
+      </div>
+      <DefaultButton
+        title="취소"
+        background="var(--divider)"
+        color="var(--black)"
+        marginTop="10px"
+        @click="isApplyBtnClick = false"
+      />
+    </template>
+  </DefaultModal>
 </template>
 
 <style scoped>
@@ -150,6 +285,7 @@ h3:first-child {
 
 .card {
   padding: 30px 20px;
+  height: 300px;
   background-color: var(--white);
   border-radius: 20px;
   color: var(--black);
@@ -211,5 +347,15 @@ h3:first-child {
 
 .applyButton {
   margin-top: 30px;
+}
+
+.fakeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-primary);
+  width: 100%;
+  height: 45px;
+  border-radius: 10px;
 }
 </style>

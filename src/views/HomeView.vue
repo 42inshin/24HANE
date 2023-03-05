@@ -17,6 +17,7 @@ const {
   getMonthlyGraph,
   getNumberOfPeople,
   getUserInfo,
+  apiAccTimes,
 } = useHomeStore();
 
 const {
@@ -29,6 +30,7 @@ const {
 onMounted(() => {
   apiMainInfo();
   apiLogsNowMonthData();
+  apiAccTimes();
 });
 
 const todayAccTime = ref(getNowDateAccTimeText());
@@ -39,51 +41,29 @@ const numberOfPeople = ref(getNumberOfPeople());
 
 const isOnline = ref(getUserInfo().inoutState);
 
-watch(
-  () => showNowMonthLogs(),
-  () => {
-    todayAccTime.value = getNowDateAccTimeText();
-    console.log("오늘 누적", todayAccTime.value);
-  }
-);
+watch(showNowMonthLogs, () => {
+  todayAccTime.value = getNowDateAccTimeText();
+});
 
-watch(
-  () => showNowMonthLogs(),
-  () => {
-    monthAccTime.value = getNowMonthAccTimeText();
-    console.log("월 누적시간", monthAccTime.value);
-  }
-);
+watch(showNowMonthLogs, () => {
+  monthAccTime.value = getNowMonthAccTimeText();
+});
 
-watch(
-  () => getWeeklyGraph(),
-  () => {
-    getWeeklyData.value = getWeeklyGraph();
-    console.log("주간 그래프", getWeeklyData.value);
-  }
-);
+watch(getWeeklyGraph, () => {
+  getWeeklyData.value = getWeeklyGraph();
+});
 
-watch(
-  () => getMonthlyGraph(),
-  () => {
-    getMonthlyData.value = getMonthlyGraph();
-    console.log("월간 그래프", getMonthlyData.value);
-  }
-);
+watch(getMonthlyGraph, () => {
+  getMonthlyData.value = getMonthlyGraph();
+});
 
-watch(
-  () => getNumberOfPeople(),
-  () => {
-    numberOfPeople.value = getNumberOfPeople();
-  }
-);
+watch(getNumberOfPeople, () => {
+  numberOfPeople.value = getNumberOfPeople();
+});
 
-watch(
-  () => getUserInfo(),
-  () => {
-    isOnline.value = getUserInfo().inoutState;
-  }
-);
+watch(getUserInfo, () => {
+  isOnline.value = getUserInfo().inoutState;
+});
 </script>
 
 <template>

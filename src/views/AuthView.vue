@@ -10,7 +10,6 @@ onMounted(() => {
 
   setTimeout(async () => {
     const isLogin = await getIsLogin();
-    console.log(isLogin?.status);
     if (isLogin?.status === STATUS_204_NO_CONTENT) {
       localStorage.setItem("isLogin", "true");
       router.push("/home");
@@ -34,7 +33,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   background-color: var(--color-background);
   padding: 30px;
 }

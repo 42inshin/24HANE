@@ -3,26 +3,23 @@ import { ref, watch } from "vue";
 import { useMonthLogStore } from "@/stores/monthlog";
 const {
   getSelectedDateAccTimeText,
-  showDataLogs,
-  showSelectedDate,
+  getDateLogs,
   showSelectedDateText,
-  showLogs,
   showIsLoading,
 } = useMonthLogStore();
 
-const logs = ref(showDataLogs());
+const logs = ref(getDateLogs());
 const isLoading = ref(showIsLoading());
 
-watch(showSelectedDate, () => {
-  logs.value = showDataLogs();
-});
-
-watch(showLogs, () => {
-  logs.value = showDataLogs();
+watch(showSelectedDateText, () => {
+  logs.value = getDateLogs();
 });
 
 watch(showIsLoading, (val) => {
   isLoading.value = val;
+  if (val == false) {
+    logs.value = getDateLogs();
+  }
 });
 
 const calcHeight = () => {
@@ -36,7 +33,7 @@ const calcHeight = () => {
   }
 };
 
-watch(showDataLogs, () => {
+watch(getDateLogs, () => {
   calcHeight();
 });
 </script>
@@ -57,12 +54,15 @@ watch(showDataLogs, () => {
         <li class="log logEmpty">기록이 없습니다.</li>
       </ul>
       <ul v-show="!isLoading" id="logs" class="logs">
-        <li v-for="(log, i) in logs" :key="i" class="log">
+        <li
+          v-for="(log, i) in logs"
+          :key="i"
+          class="log"
+          :class="{ missing: log.accLogTime === '누락' }"
+        >
           <div class="inLogTime">{{ log.inLogTime }}</div>
           <div class="outLogTime">{{ log.outLogTime }}</div>
-          <div class="accLogTime">
-            {{ log.accLogTime ? log.accLogTime : "누락" }}
-          </div>
+          <div class="accLogTime">{{ log.accLogTime }}</div>
         </li>
         <li class="log logEmpty" v-if="logs.length == 0">기록이 없습니다.</li>
       </ul>
@@ -107,12 +107,12 @@ watch(showDataLogs, () => {
   overflow-y: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  height: calc(100vh - 514px);
+  height: calc(var(--vh, 1vh) * 100 - 514px);
   padding: 0 10px;
 }
 
 .logs.smaller {
-  height: calc(100vh - 554px);
+  height: calc(var(--vh, 1vh) * 100 - 554px);
 }
 
 .logs .log {

@@ -5,6 +5,8 @@ import HomeView from "@/views/HomeView.vue";
 import CalendarView from "@/views/CalendarView.vue";
 import MoreView from "@/views/MoreView.vue";
 import NotificationView from "@/views/NotificationView.vue";
+import NotFoundViewVue from "@/views/NotFoundView.vue";
+import ApplyCardViewVue from "@/views/ApplyCardView.vue";
 import { getCookie } from "@/api/cookie/cookies";
 
 const router = createRouter({
@@ -42,16 +44,17 @@ const router = createRouter({
     },
     {
       path: "/apply-card",
-      name: "apply-card",
-      component: () => import("../views/ApplyCardView.vue"),
+      name: "applyCard",
+      component: ApplyCardViewVue,
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
+      path: "/404",
+      name: "notFound",
+      component: NotFoundViewVue,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      redirect: "/404",
     },
   ],
 });
@@ -59,14 +62,17 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const token = getCookie();
   const isLogin = localStorage.getItem("isLogin");
+  if (to.name === "login" && isLogin === "true" && !!token) {
+    next({ name: "home" });
+  }
+
   if (
     to.name !== "login" &&
     to.name !== "auth" &&
-    isLogin !== "true" &&
-    !!token
+    (isLogin !== "true" || !token)
   ) {
     next({ name: "login" });
-    alert("router: 로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");
+    alert("로그인 정보가 유효하지 않습니다.\n다시 로그인해주세요.");
   } else {
     next();
   }

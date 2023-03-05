@@ -1,6 +1,6 @@
 export interface InOutLog {
-  inTimeStamp: number;
-  outTimeStamp: number;
+  inTimeStamp: number | null;
+  outTimeStamp: number | null;
   durationSecond: number;
 }
 
@@ -24,5 +24,5 @@ export interface UserAccTime {
 
 export interface PeriodData {
   periods: string;
-  total: number;
+  total: string;
 }
