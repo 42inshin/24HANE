@@ -1,7 +1,7 @@
 <img width="100" alt="image" src="https://user-images.githubusercontent.com/72684256/222954950-6ab18005-81e1-4d0b-93d5-6097f11fee32.png">
 
 
-# 24 HANE(24 hours are not enough)
+# 24HANE (24 hours are not enough)
 
 [24HANE 바로가기](https://24hoursarenotenough.42seoul.kr/)
 
